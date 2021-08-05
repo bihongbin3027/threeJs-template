@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@": ["src/*"]
+    },
     "sourceMap": true,
     "noImplicitAny": true,
     "module": "es6",
@@ -11,5 +15,4 @@
   "include": [
     "src"
   ],
-  "extends": "./tsconfig.paths.json"
 }
