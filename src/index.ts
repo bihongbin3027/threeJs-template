@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import './style/global.css';
+import '@/style/global.css';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
