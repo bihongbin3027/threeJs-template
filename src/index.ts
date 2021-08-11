@@ -1,8 +1,9 @@
 import * as THREE from 'three';
+import BaseClass from './baseClass'
 import '@/style/global.css';
 
 // 多个立方体旋转
-class threeTemplate1 {
+class threeTemplate1 extends BaseClass {
   // 渲染器
   webGl: THREE.WebGLRenderer;
   // 透视摄像机
@@ -13,6 +14,7 @@ class threeTemplate1 {
   light: THREE.DirectionalLight;
 
   constructor() {
+    super()
     this.scene = new THREE.Scene(); // 场景
     this.webGl = this.createRender(); // 渲染器
     this.camera = this.setCamera(); // 配置摄像机
@@ -22,7 +24,7 @@ class threeTemplate1 {
   // 渲染器
   createRender() {
     const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight); // 设置尺寸
+    // renderer.setSize(window.innerWidth, window.innerHeight); // 设置尺寸
     document.body.appendChild(renderer.domElement);
     return renderer;
   }
@@ -44,7 +46,7 @@ class threeTemplate1 {
     const intensity = 1; // 强度
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(-1, 2, 4);
-    this.scene.add(this.light);
+    this.scene.add(light);
     return light;
   }
 
@@ -77,6 +79,7 @@ class threeTemplate1 {
         cube.rotation.x = rot;
         cube.rotation.y = rot;
       });
+      console.log(this.resizeRendererToDisplaySize(this.webGl, this.camera))
       // 场景和摄像机传递给渲染器
       this.webGl.render(this.scene, this.camera);
       // 动画
@@ -165,4 +168,4 @@ class threeTemplate2 {
   }
 }
 
-new threeTemplate2().render();
+new threeTemplate1().animation();
