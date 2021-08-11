@@ -2,16 +2,24 @@ import * as THREE from 'three';
 
 class BaseClass {
   constructor() {}
-  // 创建渲染器
-  createRender() {
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-    return renderer;
-  }
-  // 创建摄像机
-  createCamera(fov?: number, aspect?: number, near?: number, far?: number) {
-    return new THREE.PerspectiveCamera(fov, aspect, near, far);
+  // 自动调整canvas大小和摄像机位置（浏览器宽高不影响预览效果）
+  resizeRendererToDisplaySize(renderer: THREE.WebGLRenderer, camera?: THREE.PerspectiveCamera) {
+    const canvas = renderer.domElement;
+    // 分辨率倍数
+    const pixelRatio = window.devicePixelRatio;
+    const clientWidth = canvas.clientWidth;
+    const clientHeight = canvas.clientHeight;
+    const width = clientWidth * pixelRatio | 0;
+    const height = clientHeight * pixelRatio | 0;
+    const needResize = canvas.width !== width || canvas.height !== height;
+    if (needResize) {
+      if (camera) {
+        camera.aspect = clientWidth / clientHeight;
+        camera.updateProjectionMatrix();
+      }
+      renderer.setSize(width, height, false);
+    }
+    return needResize
   }
 }
 
