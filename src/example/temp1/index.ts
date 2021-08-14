@@ -2,8 +2,8 @@
  * @Description 多个立方体旋转
  * @Author bihongbin
  * @Date 2021-08-13 09:53:51
- * @LastEditors bihongbin
- * @LastEditTime 2021-08-13 14:50:53
+ * @LastEditors biHongBin
+ * @LastEditTime 2021-08-14 22:43:12
  */
 import * as THREE from 'three';
 import BaseClass from '../../baseClass';
@@ -24,6 +24,8 @@ export default class ThreeTemplate1 extends BaseClass {
     this.webGl = this.createRender(); // 渲染器
     this.camera = this.setCamera(); // 配置摄像机
     this.light = this.addLight(); // 添加灯光
+    // 透视摄像机自适应渲染
+    this.resizePerspectiveCameraDisplaySize(this.webGl, this.camera);
   }
 
   // 场景
@@ -85,13 +87,14 @@ export default class ThreeTemplate1 extends BaseClass {
     ];
     const content = (time?: number) => {
       time *= 0.001;
+
       cubes.forEach((cube, ndx) => {
         const speed = 1 + ndx * 0.1;
         const rot = time * speed;
         cube.rotation.x = rot;
         cube.rotation.y = rot;
       });
-      super.resizeRendererToDisplaySize(this.webGl, this.camera);
+
       // 场景和摄像机传递给渲染器
       this.webGl.render(this.scene, this.camera);
       // 动画

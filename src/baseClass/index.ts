@@ -2,34 +2,80 @@
  * @Description 超类
  * @Author bihongbin
  * @Date 2021-08-12 09:14:00
- * @LastEditors bihongbin
- * @LastEditTime 2021-08-13 09:59:47
+ * @LastEditors biHongBin
+ * @LastEditTime 2021-08-14 23:21:16
  */
 import * as THREE from 'three';
+import { GUI } from 'dat.gui';
+
+// 坐标轴和网格
+class AxisGridHelper {
+  _visible: boolean;
+  axes: THREE.AxesHelper;
+  grid: THREE.GridHelper;
+
+  constructor(node: any, units = 10) {
+    const axes = new THREE.AxesHelper();
+    axes.material.depthTest = false;
+    axes.renderOrder = 2; // after the grid
+    node.add(axes);
+
+    const grid = new THREE.GridHelper(units, units);
+    grid.material.depthTest = false;
+    grid.renderOrder = 1;
+    node.add(grid);
+
+    this.grid = grid;
+    this.axes = axes;
+    this.visible = false;
+  }
+  get visible() {
+    return this._visible;
+  }
+  set visible(v) {
+    this._visible = v;
+    this.grid.visible = v;
+    this.axes.visible = v;
+  }
+}
 
 class BaseClass {
-  constructor() {}
-  // 自动调整canvas大小和摄像机位置（浏览器宽高不影响预览效果）
-  resizeRendererToDisplaySize(
+  gui: GUI;
+
+  constructor() {
+    this.gui = new GUI();
+  }
+
+  // 生成坐标轴和网格
+  makeAxisGrid(node: any, label: any, units?: number) {
+    const helper = new AxisGridHelper(node, units);
+    this.gui.add(helper, 'visible').name(label);
+  }
+
+  // 透视摄像机 PerspectiveCamera 自适应渲染
+  resizePerspectiveCameraDisplaySize(
     renderer: THREE.WebGLRenderer,
     camera?: THREE.PerspectiveCamera,
   ) {
-    const canvas = renderer.domElement;
-    // 分辨率倍数
-    const pixelRatio = window.devicePixelRatio;
-    const clientWidth = canvas.clientWidth;
-    const clientHeight = canvas.clientHeight;
-    const width = (clientWidth * pixelRatio) | 0;
-    const height = (clientHeight * pixelRatio) | 0;
-    const needResize = canvas.width !== width || canvas.height !== height;
-    if (needResize) {
-      if (camera) {
-        camera.aspect = clientWidth / clientHeight;
-        camera.updateProjectionMatrix();
+    const resize = () => {
+      const canvas = renderer.domElement;
+      // 分辨率倍数
+      const pixelRatio = window.devicePixelRatio;
+      const clientWidth = canvas.clientWidth;
+      const clientHeight = canvas.clientHeight;
+      const width = (clientWidth * pixelRatio) | 0;
+      const height = (clientHeight * pixelRatio) | 0;
+      const needResize = canvas.width !== width || canvas.height !== height;
+      if (needResize) {
+        if (camera) {
+          camera.aspect = clientWidth / clientHeight;
+          camera.updateProjectionMatrix();
+        }
+        renderer.setSize(width, height, false);
       }
-      renderer.setSize(width, height, false);
-    }
-    return needResize;
+    };
+    resize();
+    window.addEventListener('resize', resize);
   }
 }
 
