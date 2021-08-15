@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-08-12 09:14:00
  * @LastEditors biHongBin
- * @LastEditTime 2021-08-14 23:21:16
+ * @LastEditTime 2021-08-15 15:47:48
  */
 import * as THREE from 'three';
 import { GUI } from 'dat.gui';
@@ -42,12 +42,14 @@ class AxisGridHelper {
 class BaseClass {
   gui: GUI;
 
-  constructor() {
-    this.gui = new GUI();
-  }
+  constructor() {}
 
   // 生成坐标轴和网格
-  makeAxisGrid(node: any, label: any, units?: number) {
+  makeAxisGrid(node: any, label: string, units?: number) {
+    if (!this.gui) {
+      this.gui = new GUI();
+    }
+
     const helper = new AxisGridHelper(node, units);
     this.gui.add(helper, 'visible').name(label);
   }
