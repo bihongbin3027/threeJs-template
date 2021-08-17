@@ -2,8 +2,8 @@
  * @Description 旋转坦克
  * @Author biHongBin
  * @Date 2021-08-15 15:37:12
- * @LastEditors biHongBin
- * @LastEditTime 2021-08-15 22:44:42
+ * @LastEditors bihongbin
+ * @LastEditTime 2021-08-16 11:59:10
  */
 import * as THREE from 'three';
 import BaseClass from '../../baseClass';
@@ -66,7 +66,7 @@ export default class ThreeTemplate4 extends BaseClass {
     this.scene = this.createScene();
     // 创建渲染器
     this.canvas = this.createCanvas();
-    // 创建摄像机
+    // 创建透视摄像机
     this.camera = this.createCamera();
     // 透视摄像机自适应渲染
     super.resizePerspectiveCameraDisplaySize(this.canvas, this.camera);
@@ -126,7 +126,7 @@ export default class ThreeTemplate4 extends BaseClass {
     return renderer;
   }
 
-  // 摄像机
+  // 透视摄像机
   createCamera(fov = 40) {
     const aspect = 2;
     const zNear = 0.1;
@@ -155,7 +155,7 @@ export default class ThreeTemplate4 extends BaseClass {
     const carLength = 8;
 
     // 身体
-    const bodyGeometry = new THREE.BoxGeometry(carWidth, carHeight, carLength);
+    const bodyGeometry = new THREE.BoxGeometry(carWidth, carHeight, carLength); // 四边形
     const bodyMaterial = new THREE.MeshPhongMaterial({ color: 0x6688aa });
     const bodyMesh = new THREE.Mesh(bodyGeometry, bodyMaterial);
     bodyMesh.position.y = 1.4;
@@ -170,7 +170,7 @@ export default class ThreeTemplate4 extends BaseClass {
       wheelRadius,
       wheelThickness,
       wheelSegments,
-    );
+    ); // 圆柱
     const wheelMaterial = new THREE.MeshPhongMaterial({ color: 0x888888 });
     const wheelPositions = [
       [-carWidth / 2 - wheelThickness / 2, -carHeight / 2, carLength / 3],
@@ -197,6 +197,7 @@ export default class ThreeTemplate4 extends BaseClass {
     const domePhiEnd = Math.PI * 2;
     const domeThetaStart = 0;
     const domeThetaEnd = Math.PI * 0.5;
+    // 球体
     const domeGeometry = new THREE.SphereGeometry(
       domeRadius,
       domeWidthSubdivisions,
