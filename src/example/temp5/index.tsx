@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-08-18 17:56:09
+ * @LastEditTime 2021-08-18 17:58:29
  */
 import * as THREE from 'three';
 import OrbitControls from 'three-orbitcontrols';
@@ -16,8 +16,8 @@ export default class ThreeTemplate5 extends BaseClass {
   canvas: THREE.WebGLRenderer;
   // 摄像机
   camera: THREE.PerspectiveCamera;
-  // 控制器
-  controls: any;
+  // 轨道控制器
+  orbitControls: any;
 
   constructor() {
     super();
@@ -28,8 +28,8 @@ export default class ThreeTemplate5 extends BaseClass {
     this.canvas = this.createCanvas();
     // 创建透视摄像机
     this.camera = this.createCamera();
-    // 创建控制器
-    this.controls = this.createControls();
+    // 创建轨道控制器
+    this.orbitControls = this.createOrbitControls();
   }
 
   // 场景
@@ -59,8 +59,8 @@ export default class ThreeTemplate5 extends BaseClass {
     return camera;
   }
 
-  // 控制器
-  createControls() {
+  // 轨道控制器
+  createOrbitControls() {
     const controls = new OrbitControls(this.camera, this.canvas.domElement);
     controls.target.set(0, 5, 0);
     controls.update();
