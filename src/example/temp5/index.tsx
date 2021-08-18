@@ -2,8 +2,8 @@
  * @Description 光源
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
- * @LastEditors bihongbin
- * @LastEditTime 2021-08-18 17:58:29
+ * @LastEditors biHongBin
+ * @LastEditTime 2021-08-18 23:04:42
  */
 import * as THREE from 'three';
 import OrbitControls from 'three-orbitcontrols';
@@ -18,6 +18,11 @@ export default class ThreeTemplate5 extends BaseClass {
   camera: THREE.PerspectiveCamera;
   // 轨道控制器
   orbitControls: any;
+  // 光
+  light: THREE.AmbientLight
+  // 纹理
+  texture: THREE.Texture
+  planeSize = 40
 
   constructor() {
     super();
@@ -30,6 +35,13 @@ export default class ThreeTemplate5 extends BaseClass {
     this.camera = this.createCamera();
     // 创建轨道控制器
     this.orbitControls = this.createOrbitControls();
+    // 创建光
+    this.light = this.createLight();
+
+    // 创建纹理
+    this.texture = this.createTextureLoader();
+    // 创建内容
+    this.createBody();
   }
 
   // 场景
@@ -59,12 +71,68 @@ export default class ThreeTemplate5 extends BaseClass {
     return camera;
   }
 
+  // 光
+  createLight() {
+    const color = 0xFFFFFF;
+    const intensity = 1;
+    const light = new THREE.AmbientLight(color, intensity);
+    this.scene.add(light);
+    return light
+  }
+
   // 轨道控制器
   createOrbitControls() {
     const controls = new OrbitControls(this.camera, this.canvas.domElement);
     controls.target.set(0, 5, 0);
     controls.update();
     return controls;
+  }
+
+  // 纹理
+  createTextureLoader() {
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load('images/checker.png');
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.magFilter = THREE.NearestFilter;
+    const repeats = this.planeSize / 2;
+    texture.repeat.set(repeats, repeats);
+    return texture
+  }
+
+  // 内容
+  createBody() {
+    // 平面体
+    {
+      const planeGeo = new THREE.PlaneGeometry(this.planeSize, this.planeSize);
+      const planeMat = new THREE.MeshPhongMaterial({
+        map: this.texture,
+        side: THREE.DoubleSide,
+      });
+      const mesh = new THREE.Mesh(planeGeo, planeMat);
+      mesh.rotation.x = Math.PI * -.5;
+      this.scene.add(mesh);
+    }
+    // 正方体
+    {
+      const cubeSize = 4;
+      const cubeGeo = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+      const cubeMat = new THREE.MeshPhongMaterial({ color: '#8ac' });
+      const mesh = new THREE.Mesh(cubeGeo, cubeMat);
+      mesh.position.set(cubeSize + 1, cubeSize / 2, 0);
+      this.scene.add(mesh);
+    }
+    // 球
+    {
+      const sphereRadius = 3;
+      const sphereWidthDivisions = 32;
+      const sphereHeightDivisions = 16;
+      const sphereGeo = new THREE.SphereBufferGeometry(sphereRadius, sphereWidthDivisions, sphereHeightDivisions);
+      const sphereMat = new THREE.MeshPhongMaterial({ color: '#ca8' });
+      const mesh = new THREE.Mesh(sphereGeo, sphereMat);
+      mesh.position.set(-sphereRadius - 1, sphereRadius + 2, 0);
+      this.scene.add(mesh);
+    }
   }
 
   render() {

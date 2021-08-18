@@ -25,14 +25,11 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.(jpg|png|gif|svg)$/,
+        test: /\.(png|svg|jpg|gif)$/,
         use: {
           loader: 'url-loader',
           options: {
-            name: '[name].[ext]',
-            limit: 14000,
-            outputPath: 'img/',
-            publicPath: 'dist/img',
+            limit: 10000, //是把小于1k的文件打成Base64的格式，写入JS
           },
         },
       },
