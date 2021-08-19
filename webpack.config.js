@@ -25,6 +25,14 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
+        test: require.resolve('three/examples/js/controls/OrbitControls'),
+        use: 'imports-loader?THREE=three',
+      },
+      {
+        test: require.resolve('three/examples/js/controls/OrbitControls'),
+        use: 'exports-loader?THREE.OrbitControls',
+      },
+      {
         test: /\.(png|svg|jpg|gif)$/,
         use: {
           loader: 'url-loader',

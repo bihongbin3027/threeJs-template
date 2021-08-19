@@ -2,11 +2,11 @@
  * @Description 光源
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
- * @LastEditors biHongBin
- * @LastEditTime 2021-08-18 23:04:42
+ * @LastEditors bihongbin
+ * @LastEditTime 2021-08-19 17:54:39
  */
 import * as THREE from 'three';
-import OrbitControls from 'three-orbitcontrols';
+import { OrbitControls } from 'three-orbitcontrols-ts';
 import BaseClass from '../../baseClass';
 
 export default class ThreeTemplate5 extends BaseClass {
@@ -17,12 +17,12 @@ export default class ThreeTemplate5 extends BaseClass {
   // 摄像机
   camera: THREE.PerspectiveCamera;
   // 轨道控制器
-  orbitControls: any;
+  orbitControls: OrbitControls;
   // 光
-  light: THREE.AmbientLight
+  light: THREE.AmbientLight;
   // 纹理
-  texture: THREE.Texture
-  planeSize = 40
+  texture: THREE.Texture;
+  planeSize = 40;
 
   constructor() {
     super();
@@ -73,17 +73,19 @@ export default class ThreeTemplate5 extends BaseClass {
 
   // 光
   createLight() {
-    const color = 0xFFFFFF;
+    const color = 0xffffff;
     const intensity = 1;
     const light = new THREE.AmbientLight(color, intensity);
     this.scene.add(light);
-    return light
+    return light;
   }
 
   // 轨道控制器
   createOrbitControls() {
     const controls = new OrbitControls(this.camera, this.canvas.domElement);
-    controls.target.set(0, 5, 0);
+    controls.autoRotate = false;
+    controls.enableZoom = true;
+    controls.enablePan = true;
     controls.update();
     return controls;
   }
@@ -97,7 +99,7 @@ export default class ThreeTemplate5 extends BaseClass {
     texture.magFilter = THREE.NearestFilter;
     const repeats = this.planeSize / 2;
     texture.repeat.set(repeats, repeats);
-    return texture
+    return texture;
   }
 
   // 内容
@@ -110,7 +112,7 @@ export default class ThreeTemplate5 extends BaseClass {
         side: THREE.DoubleSide,
       });
       const mesh = new THREE.Mesh(planeGeo, planeMat);
-      mesh.rotation.x = Math.PI * -.5;
+      mesh.rotation.x = Math.PI * -0.5;
       this.scene.add(mesh);
     }
     // 正方体
@@ -127,7 +129,11 @@ export default class ThreeTemplate5 extends BaseClass {
       const sphereRadius = 3;
       const sphereWidthDivisions = 32;
       const sphereHeightDivisions = 16;
-      const sphereGeo = new THREE.SphereBufferGeometry(sphereRadius, sphereWidthDivisions, sphereHeightDivisions);
+      const sphereGeo = new THREE.SphereBufferGeometry(
+        sphereRadius,
+        sphereWidthDivisions,
+        sphereHeightDivisions,
+      );
       const sphereMat = new THREE.MeshPhongMaterial({ color: '#ca8' });
       const mesh = new THREE.Mesh(sphereGeo, sphereMat);
       mesh.position.set(-sphereRadius - 1, sphereRadius + 2, 0);
