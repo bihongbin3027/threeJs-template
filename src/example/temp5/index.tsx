@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-08-19 17:54:39
+ * @LastEditTime 2021-08-19 18:25:47
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three-orbitcontrols-ts';
@@ -86,7 +86,7 @@ export default class ThreeTemplate5 extends BaseClass {
     controls.autoRotate = false;
     controls.enableZoom = true;
     controls.enablePan = true;
-    controls.update();
+    controls.addEventListener('change', this.render.bind(this));
     return controls;
   }
 

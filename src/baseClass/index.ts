@@ -2,8 +2,8 @@
  * @Description 超类
  * @Author bihongbin
  * @Date 2021-08-12 09:14:00
- * @LastEditors biHongBin
- * @LastEditTime 2021-08-15 15:47:48
+ * @LastEditors bihongbin
+ * @LastEditTime 2021-08-19 18:21:38
  */
 import * as THREE from 'three';
 import { GUI } from 'dat.gui';
@@ -16,12 +16,12 @@ class AxisGridHelper {
 
   constructor(node: any, units = 10) {
     const axes = new THREE.AxesHelper();
-    axes.material.depthTest = false;
+    // axes.material.depthTest = false;
     axes.renderOrder = 2; // after the grid
     node.add(axes);
 
     const grid = new THREE.GridHelper(units, units);
-    grid.material.depthTest = false;
+    // grid.material.depthTest = false;
     grid.renderOrder = 1;
     node.add(grid);
 
