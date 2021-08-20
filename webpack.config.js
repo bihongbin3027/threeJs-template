@@ -1,10 +1,11 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const isDev = process.env.NODE_ENV === 'development';
 const resolve = (dir) => path.resolve(__dirname, dir);
 
 module.exports = {
-  mode: 'development',
+  mode: isDev ? 'development' : 'production',
   entry: './src/index.ts',
   devtool: 'inline-source-map',
   output: {
@@ -25,19 +26,13 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: require.resolve('three/examples/js/controls/OrbitControls'),
-        use: 'imports-loader?THREE=three',
-      },
-      {
-        test: require.resolve('three/examples/js/controls/OrbitControls'),
-        use: 'exports-loader?THREE.OrbitControls',
-      },
-      {
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(png|jpg|gif|jpeg|webp|svg|eot|gltf|ttf|woff|woff2)$/,
         use: {
           loader: 'url-loader',
           options: {
-            limit: 10000, //是把小于1k的文件打成Base64的格式，写入JS
+            limit: 10240, //是把小于10k的文件打成Base64的格式，写入JS
+            esModule: false,
+            name: '[name]_[hash:0].[ext]',
           },
         },
       },

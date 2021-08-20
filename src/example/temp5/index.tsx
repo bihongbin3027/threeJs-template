@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-08-19 18:25:47
+ * @LastEditTime 2021-08-20 16:57:07
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three-orbitcontrols-ts';
@@ -20,8 +20,8 @@ export default class ThreeTemplate5 extends BaseClass {
   orbitControls: OrbitControls;
   // 光
   light: THREE.AmbientLight;
-  // 纹理
-  texture: THREE.Texture;
+
+  // 最外层面板大小
   planeSize = 40;
 
   constructor() {
@@ -38,8 +38,6 @@ export default class ThreeTemplate5 extends BaseClass {
     // 创建光
     this.light = this.createLight();
 
-    // 创建纹理
-    this.texture = this.createTextureLoader();
     // 创建内容
     this.createBody();
   }
@@ -47,6 +45,7 @@ export default class ThreeTemplate5 extends BaseClass {
   // 场景
   createScene() {
     const scene = new THREE.Scene();
+    scene.add(new THREE.AxesHelper(5));
     return scene;
   }
 
@@ -90,31 +89,39 @@ export default class ThreeTemplate5 extends BaseClass {
     return controls;
   }
 
-  // 纹理
-  createTextureLoader() {
+  // 创建地面
+  createGround() {
+    const checker = require('../../images/checker.png').default;
     const loader = new THREE.TextureLoader();
-    const texture = loader.load('images/checker.png');
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.magFilter = THREE.NearestFilter;
-    const repeats = this.planeSize / 2;
-    texture.repeat.set(repeats, repeats);
-    return texture;
+    loader.load(checker, (texture) => {
+      const repeats = this.planeSize / 2;
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.magFilter = THREE.NearestFilter;
+      texture.repeat.set(repeats, repeats);
+      // 平面体
+      {
+        const planeGeo = new THREE.PlaneGeometry(
+          this.planeSize,
+          this.planeSize,
+        );
+        const planeMat = new THREE.MeshPhongMaterial({
+          map: texture,
+          side: THREE.DoubleSide,
+        });
+
+        const mesh = new THREE.Mesh(planeGeo, planeMat);
+        mesh.rotation.x = Math.PI * -0.5;
+        this.scene.add(mesh);
+      }
+      this.render();
+    });
   }
 
   // 内容
   createBody() {
-    // 平面体
-    {
-      const planeGeo = new THREE.PlaneGeometry(this.planeSize, this.planeSize);
-      const planeMat = new THREE.MeshPhongMaterial({
-        map: this.texture,
-        side: THREE.DoubleSide,
-      });
-      const mesh = new THREE.Mesh(planeGeo, planeMat);
-      mesh.rotation.x = Math.PI * -0.5;
-      this.scene.add(mesh);
-    }
+    // 创建地面
+    this.createGround();
     // 正方体
     {
       const cubeSize = 4;
