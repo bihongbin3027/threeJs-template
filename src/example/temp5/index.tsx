@@ -3,11 +3,12 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-08-20 16:57:07
+ * @LastEditTime 2021-08-23 09:43:41
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three-orbitcontrols-ts';
 import BaseClass from '../../baseClass';
+import checker from '../../images/checker.png';
 
 export default class ThreeTemplate5 extends BaseClass {
   // 场景
@@ -91,7 +92,6 @@ export default class ThreeTemplate5 extends BaseClass {
 
   // 创建地面
   createGround() {
-    const checker = require('../../images/checker.png').default;
     const loader = new THREE.TextureLoader();
     loader.load(checker, (texture) => {
       const repeats = this.planeSize / 2;
