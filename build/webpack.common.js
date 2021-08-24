@@ -31,7 +31,8 @@ module.exports = {
         use: {
           loader: 'url-loader',
           options: {
-            limit: 10240, //是把小于10k的文件打成Base64的格式，写入JS
+            // 把小于10k的文件打成Base64的格式，写入JS
+            limit: 10240,
             esModule: false,
             name: '[name]_[hash:0].[ext]',
           },
@@ -44,6 +45,10 @@ module.exports = {
       '@': resolve('src'),
     },
     extensions: ['.tsx', '.ts', '.js'],
+  },
+  // webpack的性能提示，开发环境不启用，生成环境启用
+  performance: {
+    hints: process.env.NODE_ENV === 'development' ? false : 'error',
   },
   plugins: [new HtmlWebpackPlugin(), new CleanWebpackPlugin()],
 };
