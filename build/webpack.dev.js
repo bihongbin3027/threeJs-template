@@ -14,6 +14,14 @@ const devConfig = {
     // 开发环境不启用
     hints: false,
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
   plugins: [new webpack.HotModuleReplacementPlugin()],
 };
 

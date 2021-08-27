@@ -1,4 +1,9 @@
 const { merge } = require('webpack-merge');
+// 打包前清空文件夹
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// 提取css单独一个文件
+const MiniCssExtractplugin = require('mini-css-extract-plugin');
+
 const commonConfig = require('./webpack.common');
 
 const prodConfig = {
@@ -12,7 +17,20 @@ const prodConfig = {
     // 以字节单位
     maxAssetSize: 450000,
   },
-  plugins: [],
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractplugin.loader, 'css-loader'],
+      },
+    ],
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new MiniCssExtractplugin({
+      filename: '[name]_[contenthash:8].css',
+    }),
+  ],
 };
 
 module.exports = merge(commonConfig, prodConfig);

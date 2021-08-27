@@ -3,10 +3,10 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-08-27 10:07:32
+ * @LastEditTime 2021-08-27 17:45:15
  */
 import * as THREE from 'three';
-import { OrbitControls } from 'three-orbitcontrols-ts';
+import { OrbitControls } from '@three-ts/orbit-controls';
 import BaseClass from '@/baseClass';
 import checker from '@/images/checker.png';
 
@@ -22,7 +22,7 @@ export default class ThreeTemplate5 extends BaseClass {
   // 光
   light: THREE.AmbientLight;
 
-  // 最外层面板大小
+  // 地面大小
   planeSize = 40;
 
   constructor() {
@@ -83,7 +83,7 @@ export default class ThreeTemplate5 extends BaseClass {
   // 轨道控制器
   createOrbitControls() {
     const controls = new OrbitControls(this.camera, this.canvas.domElement);
-    controls.autoRotate = false;
+    controls.autoRotate = true;
     controls.enableZoom = true;
     controls.enablePan = true;
     controls.addEventListener('change', this.render.bind(this));
