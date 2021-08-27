@@ -9,6 +9,11 @@ const devConfig = {
     open: true,
     hot: true,
   },
+  // webpack的性能提示
+  performance: {
+    // 开发环境不启用
+    hints: false,
+  },
   plugins: [new webpack.HotModuleReplacementPlugin()],
 };
 

@@ -3,12 +3,12 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-08-23 09:43:41
+ * @LastEditTime 2021-08-27 10:07:32
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three-orbitcontrols-ts';
-import BaseClass from '../../baseClass';
-import checker from '../../images/checker.png';
+import BaseClass from '@/baseClass';
+import checker from '@/images/checker.png';
 
 export default class ThreeTemplate5 extends BaseClass {
   // 场景

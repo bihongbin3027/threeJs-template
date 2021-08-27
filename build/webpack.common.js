@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+// 必须定义resolve
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
@@ -45,11 +46,6 @@ module.exports = {
       '@': path.resolve('src'),
     },
     extensions: ['.tsx', '.ts', '.js'],
-  },
-  // webpack的性能提示
-  performance: {
-    // 开发环境不启用，生成环境启用
-    hints: process.env.NODE_ENV === 'development' ? false : 'warning',
   },
   plugins: [new HtmlWebpackPlugin(), new CleanWebpackPlugin()],
 };
