@@ -42,13 +42,14 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@': resolve('src'),
+      '@': path.resolve('src'),
     },
     extensions: ['.tsx', '.ts', '.js'],
   },
-  // webpack的性能提示，开发环境不启用，生成环境启用
+  // webpack的性能提示
   performance: {
-    hints: process.env.NODE_ENV === 'development' ? false : 'error',
+    // 开发环境不启用，生成环境启用
+    hints: process.env.NODE_ENV === 'development' ? false : 'warning',
   },
   plugins: [new HtmlWebpackPlugin(), new CleanWebpackPlugin()],
 };

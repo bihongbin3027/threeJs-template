@@ -1,9 +1,6 @@
 {
+  "extends": "./paths.json",
   "compilerOptions": {
-    "baseUrl": "src",
-    "paths": {
-      "@": ["src/*"]
-    },
     "sourceMap": true,
     "noImplicitAny": true,
     "module": "es6",
