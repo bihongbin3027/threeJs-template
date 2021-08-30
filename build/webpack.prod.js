@@ -3,6 +3,8 @@ const { merge } = require('webpack-merge');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 // 提取css单独一个文件
 const MiniCssExtractplugin = require('mini-css-extract-plugin');
+// 优化和压缩css
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 const commonConfig = require('./webpack.common');
 
@@ -21,18 +23,7 @@ const prodConfig = {
     rules: [
       {
         test: /\.css$/,
-        use: [
-          MiniCssExtractplugin.loader,
-          'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: [['postcss-preset-env']],
-              },
-            },
-          },
-        ],
+        use: [MiniCssExtractplugin.loader, 'css-loader', 'postcss-loader'],
       },
     ],
   },
@@ -41,6 +32,7 @@ const prodConfig = {
     new MiniCssExtractplugin({
       filename: '[name]_[contenthash:8].css',
     }),
+    new CssMinimizerPlugin(),
   ],
 };
 
