@@ -1,6 +1,8 @@
 const { merge } = require('webpack-merge');
 // 打包前清空文件夹
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// js压缩
+const TerserPlugin = require('terser-webpack-plugin');
 // 提取css单独一个文件
 const MiniCssExtractplugin = require('mini-css-extract-plugin');
 // 优化和压缩css
@@ -18,6 +20,13 @@ const prodConfig = {
     maxEntrypointSize: 50000,
     // 以字节单位
     maxAssetSize: 450000,
+  },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+      }),
+    ],
   },
   module: {
     rules: [
