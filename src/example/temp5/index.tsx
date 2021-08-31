@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-08-27 17:45:15
+ * @LastEditTime 2021-08-31 14:47:39
  */
 import * as THREE from 'three';
 import { OrbitControls } from '@three-ts/orbit-controls';
@@ -46,7 +46,7 @@ export default class ThreeTemplate5 extends BaseClass {
   // 场景
   createScene() {
     const scene = new THREE.Scene();
-    scene.add(new THREE.AxesHelper(5));
+    scene.add(new THREE.AxesHelper(10));
     return scene;
   }
 
@@ -71,15 +71,6 @@ export default class ThreeTemplate5 extends BaseClass {
     return camera;
   }
 
-  // 光
-  createLight() {
-    const color = 0xffffff;
-    const intensity = 1;
-    const light = new THREE.AmbientLight(color, intensity);
-    this.scene.add(light);
-    return light;
-  }
-
   // 轨道控制器
   createOrbitControls() {
     const controls = new OrbitControls(this.camera, this.canvas.domElement);
@@ -88,6 +79,15 @@ export default class ThreeTemplate5 extends BaseClass {
     controls.enablePan = true;
     controls.addEventListener('change', this.render.bind(this));
     return controls;
+  }
+
+  // 光
+  createLight() {
+    const color = 0xffffff;
+    const intensity = 1;
+    const light = new THREE.AmbientLight(color, intensity);
+    this.scene.add(light);
+    return light;
   }
 
   // 创建地面
