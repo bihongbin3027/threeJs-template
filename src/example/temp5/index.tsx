@@ -3,12 +3,31 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-08-31 14:47:39
+ * @LastEditTime 2021-09-02 15:57:47
  */
 import * as THREE from 'three';
 import { OrbitControls } from '@three-ts/orbit-controls';
+import { GUI } from 'dat.gui';
 import BaseClass from '@/baseClass';
 import checker from '@/images/checker.png';
+
+class ColorGUIHelper {
+  object: any;
+  prop: string;
+
+  constructor(object: ColorGUIHelper['object'], prop: ColorGUIHelper['prop']) {
+    this.object = object;
+    this.prop = prop;
+  }
+
+  get value() {
+    return `#${this.object[this.prop].getHexString()}`;
+  }
+
+  set value(hexString) {
+    this.object[this.prop].set(hexString);
+  }
+}
 
 export default class ThreeTemplate5 extends BaseClass {
   // 场景
@@ -20,7 +39,7 @@ export default class ThreeTemplate5 extends BaseClass {
   // 轨道控制器
   orbitControls: OrbitControls;
   // 光
-  light: THREE.AmbientLight;
+  light: THREE.DirectionalLight;
 
   // 地面大小
   planeSize = 40;
@@ -85,8 +104,39 @@ export default class ThreeTemplate5 extends BaseClass {
   createLight() {
     const color = 0xffffff;
     const intensity = 1;
-    const light = new THREE.AmbientLight(color, intensity);
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(0, 10, 0);
+    light.target.position.set(-5, 0, 0);
     this.scene.add(light);
+    this.scene.add(light.target);
+
+    // GUI助手参数控制
+    {
+      const gui = new GUI();
+      const colorController = gui
+        .addColor(new ColorGUIHelper(light, 'color'), 'value')
+        .name('color');
+      const intensityController = gui.add(light, 'intensity', 0, 2, 0.01);
+      const xController = gui.add(light.target.position, 'x', -10, 10);
+      const yController = gui.add(light.target.position, 'z', -10, 10);
+      const zController = gui.add(light.target.position, 'y', 0, 10);
+      colorController.onChange(() => {
+        this.render();
+      });
+      intensityController.onChange(() => {
+        this.render();
+      });
+      xController.onChange(() => {
+        this.render();
+      });
+      yController.onChange(() => {
+        this.render();
+      });
+      zController.onChange(() => {
+        this.render();
+      });
+    }
+
     return light;
   }
 
