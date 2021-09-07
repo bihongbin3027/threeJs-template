@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-09-02 15:57:47
+ * @LastEditTime 2021-09-03 17:15:50
  */
 import * as THREE from 'three';
 import { OrbitControls } from '@three-ts/orbit-controls';
@@ -84,7 +84,7 @@ export default class ThreeTemplate5 extends BaseClass {
     const near = 0.1;
     const far = 100;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 10, 20);
+    camera.position.set(0, 10, 30);
     // 透视摄像机自适应渲染
     super.resizePerspectiveCameraDisplaySize(this.canvas, camera);
     return camera;
@@ -105,38 +105,44 @@ export default class ThreeTemplate5 extends BaseClass {
     const color = 0xffffff;
     const intensity = 1;
     const light = new THREE.DirectionalLight(color, intensity);
+    const helper = new THREE.DirectionalLightHelper(light);
     light.position.set(0, 10, 0);
     light.target.position.set(-5, 0, 0);
     this.scene.add(light);
     this.scene.add(light.target);
+    this.scene.add(helper);
 
-    // GUI助手参数控制
+    // GUI相关
     {
-      const gui = new GUI();
-      const colorController = gui
-        .addColor(new ColorGUIHelper(light, 'color'), 'value')
-        .name('color');
-      const intensityController = gui.add(light, 'intensity', 0, 2, 0.01);
-      const xController = gui.add(light.target.position, 'x', -10, 10);
-      const yController = gui.add(light.target.position, 'z', -10, 10);
-      const zController = gui.add(light.target.position, 'y', 0, 10);
-      colorController.onChange(() => {
+      const makeXYZGUI = (
+        gui: GUI,
+        vector3: THREE.Vector3,
+        name: keyof THREE.DirectionalLight,
+        onChangeFn: (value?: any) => void,
+      ) => {
+        const folder = gui.addFolder(name);
+        folder.add(vector3, 'x', -10, 10).onChange(onChangeFn);
+        folder.add(vector3, 'y', 0, 10).onChange(onChangeFn);
+        folder.add(vector3, 'z', -10, 10).onChange(onChangeFn);
+        folder.open();
+      };
+      const updateLight = () => {
+        light.target.updateMatrixWorld();
+        helper.update();
         this.render();
-      });
-      intensityController.onChange(() => {
-        this.render();
-      });
-      xController.onChange(() => {
-        this.render();
-      });
-      yController.onChange(() => {
-        this.render();
-      });
-      zController.onChange(() => {
-        this.render();
-      });
-    }
+      };
 
+      const gui = new GUI();
+      gui
+        .addColor(new ColorGUIHelper(light, 'color'), 'value')
+        .onChange(updateLight)
+        .name('color');
+      gui.add(light, 'intensity', 0, 2, 0.01).onChange(updateLight);
+      makeXYZGUI(gui, light.position, 'position', updateLight);
+      makeXYZGUI(gui, light.target.position, 'target', updateLight);
+
+      updateLight();
+    }
     return light;
   }
 
