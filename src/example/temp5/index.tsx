@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-09-03 17:15:50
+ * @LastEditTime 2021-09-14 11:52:51
  */
 import * as THREE from 'three';
 import { OrbitControls } from '@three-ts/orbit-controls';
@@ -204,6 +204,7 @@ export default class ThreeTemplate5 extends BaseClass {
     }
   }
 
+  // 渲染内容
   render() {
     this.canvas.render(this.scene, this.camera);
   }
