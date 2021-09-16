@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-09-14 11:09:18
  * @LastEditors bihongbin
- * @LastEditTime 2021-09-15 18:16:32
+ * @LastEditTime 2021-09-16 16:41:51
  */
 import * as THREE from 'three';
 import { OrbitControls } from '@three-ts/orbit-controls';
@@ -21,6 +21,8 @@ export default class ThreeTemplate6 extends BaseClass {
   // 轨道控制器
   orbitControls: OrbitControls;
 
+  // TextureLoader
+  textureLoader = new THREE.TextureLoader();
   // 地面大小
   planeSize = 40;
   // 所有球体
@@ -67,7 +69,7 @@ export default class ThreeTemplate6 extends BaseClass {
     const near = 0.1;
     const far = 100;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 10, 30);
+    camera.position.set(0, 10, 20);
     // 透视摄像机自适应渲染
     super.resizePerspectiveCameraDisplaySize(this.canvas, camera);
     return camera;
@@ -79,15 +81,36 @@ export default class ThreeTemplate6 extends BaseClass {
     controls.autoRotate = true;
     controls.enableZoom = true;
     controls.enablePan = true;
-    controls.addEventListener('change', this.render.bind(this));
+    // controls.addEventListener('change', this.render.bind(this));
     return controls;
+  }
+
+  // 光
+  createLight() {
+    // 半球光
+    {
+      const skyColor = 0xb1e1ff;
+      const groundColor = 0xb97a20;
+      const intensity = 0.25;
+      const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+      this.scene.add(light);
+    }
+    // 平行光
+    {
+      const color = 0xffffff;
+      const intensity = 0.75;
+      const light = new THREE.DirectionalLight(color, intensity);
+      light.position.set(0, 10, 5);
+      light.target.position.set(-5, 0, 0);
+      this.scene.add(light);
+      this.scene.add(light.target);
+    }
   }
 
   // 地面
   createGround() {
-    const loader = new THREE.TextureLoader();
     // 地面贴图
-    loader.load(checker, (texture) => {
+    this.textureLoader.load(checker, (texture) => {
       const repeats = this.planeSize / 2;
       // 纹理水平方向包裹方式
       texture.wrapS = THREE.RepeatWrapping;
@@ -111,15 +134,11 @@ export default class ThreeTemplate6 extends BaseClass {
       const mesh = new THREE.Mesh(planeGeo, planeMat);
       mesh.rotation.x = Math.PI * -0.5;
       this.scene.add(mesh);
-
-      // 这段代码添加了动画后删掉
-      this.render();
     });
   }
 
   // 阴影球体
   createShadowSphere() {
-    const loader = new THREE.TextureLoader();
     const sphereRadius = 1;
     const sphereWidthDivisions = 32;
     const sphereHeightDivisions = 16;
@@ -132,7 +151,7 @@ export default class ThreeTemplate6 extends BaseClass {
     // 水平面(放阴影)
     const shadowGeo = new THREE.PlaneGeometry(1, 1);
     // 阴影贴图
-    loader.load(roundShadow, (texture) => {
+    this.textureLoader.load(roundShadow, (texture) => {
       const numSpheres = 15;
       for (let i = 0; i < numSpheres; i++) {
         const base = new THREE.Object3D();
@@ -166,14 +185,13 @@ export default class ThreeTemplate6 extends BaseClass {
           y: sphereMesh.position.y,
         });
       }
-
-      // 这段代码添加了动画后删掉
-      this.render();
     });
   }
 
   // 内容
   createBody() {
+    // 创建光
+    this.createLight();
     // 创建地面
     this.createGround();
     // 创建阴影球体
@@ -181,6 +199,32 @@ export default class ThreeTemplate6 extends BaseClass {
   }
 
   render() {
-    this.canvas.render(this.scene, this.camera);
+    const content = (time: number) => {
+      // 转换为秒
+      time *= 0.001;
+
+      this.sphereShadowBases.forEach((sphereShadowBase, ndx) => {
+        const { base, sphereMesh, shadowMesh, y } = sphereShadowBase;
+        const u = ndx / this.sphereShadowBases.length;
+
+        const speed = time * 0.2;
+        const angle = speed + u * Math.PI * 2 * (ndx % 1 ? 1 : -1);
+        const radius = Math.sin(speed - ndx) * 10;
+        const yOff = Math.abs(Math.sin(time * 2 + ndx));
+        base.position.set(
+          Math.cos(angle) * radius,
+          0,
+          Math.sin(angle) * radius,
+        );
+
+        sphereMesh.position.y = y + THREE.MathUtils.lerp(-2, 2, yOff);
+        // @ts-ignore
+        shadowMesh.material.opacity = THREE.MathUtils.lerp(1, 0.25, yOff);
+      });
+
+      this.canvas.render(this.scene, this.camera);
+      requestAnimationFrame(content);
+    };
+    requestAnimationFrame(content);
   }
 }
