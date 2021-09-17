@@ -3,10 +3,10 @@
  * @Author bihongbin
  * @Date 2021-09-14 11:09:18
  * @LastEditors bihongbin
- * @LastEditTime 2021-09-16 16:41:51
+ * @LastEditTime 2021-09-17 11:34:54
  */
 import * as THREE from 'three';
-import { OrbitControls } from '@three-ts/orbit-controls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import BaseClass from '@/baseClass';
 import checker from '@/images/checker.png';
 import roundShadow from '@/images/roundshadow.png';
