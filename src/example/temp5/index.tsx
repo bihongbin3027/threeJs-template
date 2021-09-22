@@ -3,13 +3,13 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-09-14 11:52:51
+ * @LastEditTime 2021-09-22 15:38:32
  */
 import * as THREE from 'three';
 import { OrbitControls } from '@three-ts/orbit-controls';
 import { GUI } from 'dat.gui';
 import BaseClass from '@/baseClass';
-import checker from '@/images/checker.png';
+import checker from '@/assets/images/checker.png';
 
 class ColorGUIHelper {
   object: any;

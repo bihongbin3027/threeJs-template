@@ -3,13 +3,13 @@
  * @Author bihongbin
  * @Date 2021-09-14 11:09:18
  * @LastEditors bihongbin
- * @LastEditTime 2021-09-17 11:34:54
+ * @LastEditTime 2021-09-22 15:38:38
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import BaseClass from '@/baseClass';
-import checker from '@/images/checker.png';
-import roundShadow from '@/images/roundshadow.png';
+import checker from '@/assets/images/checker.png';
+import roundShadow from '@/assets/images/roundshadow.png';
 
 export default class ThreeTemplate6 extends BaseClass {
   // 场景
