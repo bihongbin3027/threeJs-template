@@ -7,13 +7,14 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractplugin = require('mini-css-extract-plugin');
 // 优化和压缩css
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-// 拷贝public文件夹到build文件夹里面
-const CopyPlugin = require('copy-webpack-plugin')
 
 const commonConfig = require('./webpack.common');
 
 const prodConfig = {
   mode: 'production',
+  output: {
+    publicPath: './',
+  },
   // webpack的性能提示
   performance: {
     // 生产环境启用
@@ -44,11 +45,6 @@ const prodConfig = {
       filename: '[name]_[contenthash:8].css',
     }),
     new CssMinimizerPlugin(),
-    new CopyPlugin({
-      patterns: [
-        { from: "public", to: "public" },
-      ],
-    }),
   ],
 };
 

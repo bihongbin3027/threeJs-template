@@ -4,6 +4,9 @@ const commonConfig = require('./webpack.common');
 
 const devConfig = {
   mode: 'development',
+  output: {
+    publicPath: '/',
+  },
   devtool: 'eval-source-map',
   devServer: {
     open: true,

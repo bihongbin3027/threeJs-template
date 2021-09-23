@@ -13,7 +13,6 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, '../dist'),
-    publicPath: '/',
   },
   module: {
     rules: [
@@ -23,13 +22,17 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|jpg|gif|jpeg|webp|svg|eot|gltf|ttf|woff|woff2)$/,
+        test: /\.(png|jpg|gif|jpeg|webp|svg|eot|gltf|ttf|woff|woff2|obj|mtl)$/,
         use: {
           loader: 'url-loader',
           options: {
             // 把小于10k的文件打成Base64的格式，写入JS
             limit: 10240,
+            // false 使用common.js
             esModule: false,
+            // 超过10k输出的文件目录
+            outputPath: 'assets',
+            // 超过10k的文件名称
             name: '[name]_[hash:0].[ext]',
           },
         },
