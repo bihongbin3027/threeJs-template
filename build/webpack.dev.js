@@ -11,7 +11,6 @@ const devConfig = {
   devServer: {
     open: true,
     hot: true,
-    static: true,
   },
   // webpack的性能提示
   performance: {

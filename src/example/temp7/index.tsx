@@ -3,17 +3,33 @@
  * @Author bihongbin
  * @Date 2021-09-23 10:10:46
  * @LastEditors bihongbin
- * @LastEditTime 2021-09-23 16:45:38
+ * @LastEditTime 2021-09-24 13:58:36
  */
 import * as THREE from 'three';
+import { GUI } from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import BaseClass from '@/baseClass';
 
 const checker = require('@/assets/images/checker.png');
-const lamborghini = require('@/assets/model/lamborghini/Lamborghini.obj');
-const lamborghiniMtl = require('@/assets/model/lamborghini/Lamborghini.mtl');
+const volkswagenMtl = require('@/assets/model/volkswagen/car.mtl');
+const volkswagen = require('@/assets/model/volkswagen/car.obj');
+
+class ColorGUIHelper {
+  object: THREE.DirectionalLight;
+  prop: 'color';
+  constructor(object: ColorGUIHelper['object'], prop: ColorGUIHelper['prop']) {
+    this.object = object;
+    this.prop = prop;
+  }
+  get value() {
+    return `#${this.object[this.prop].getHexString()}`;
+  }
+  set value(hexString) {
+    this.object[this.prop].set(hexString);
+  }
+}
 
 export default class ThreeTemplate7 extends BaseClass {
   // 场景
@@ -32,7 +48,7 @@ export default class ThreeTemplate7 extends BaseClass {
   // MtlLoader
   mtlLoader = new MTLLoader();
   // 地面大小
-  planeSize = 40;
+  planeSize = 200;
 
   constructor() {
     super();
@@ -67,11 +83,11 @@ export default class ThreeTemplate7 extends BaseClass {
     const fov = 45;
     const aspect = 2;
     const near = 0.1;
-    const far = 100;
+    const far = 1000;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 10, 20);
+    camera.position.set(0, 10, 100);
     // 透视摄像机自适应
-    super.resizePerspectiveCameraDisplaySize(this.canvas, camera);
+    super.resizePerspectiveCameraDisplaySize(this.canvas, camera, this.scene);
     return camera;
   }
 
@@ -98,8 +114,38 @@ export default class ThreeTemplate7 extends BaseClass {
     const color = 0xffffff;
     const intensity = 0.75;
     const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(0, 10, 5);
+    light.position.set(0, 10, 50);
     this.scene.add(light);
+
+    const helper = new THREE.DirectionalLightHelper(light, 5);
+    this.scene.add(helper);
+    const updateLight = () => {
+      light.target.updateMatrixWorld();
+      helper.update();
+      this.render();
+    };
+    const makeXYZGUI = (
+      gui: GUI,
+      vector3: THREE.Vector3,
+      name: string,
+      onChangeFn: () => void,
+    ) => {
+      const folder = gui.addFolder(name);
+      folder.add(vector3, 'x', -10, 10).onChange(onChangeFn);
+      folder.add(vector3, 'y', 0, 10).onChange(onChangeFn);
+      folder.add(vector3, 'z', -10, 50).onChange(onChangeFn);
+      folder.open();
+    };
+
+    const gui = new GUI();
+    gui
+      .addColor(new ColorGUIHelper(light, 'color'), 'value')
+      .name('color')
+      .onChange(updateLight);
+    gui.add(light, 'intensity', 0, 2, 0.01).onChange(updateLight);
+
+    makeXYZGUI(gui, light.position, 'position', updateLight);
+    makeXYZGUI(gui, light.target.position, 'target', updateLight);
   }
 
   // 地面
@@ -121,7 +167,7 @@ export default class ThreeTemplate7 extends BaseClass {
       // 材质
       const planeMat = new THREE.MeshBasicMaterial({
         map: texture,
-        // 双面纹理
+        // 双面材质
         side: THREE.DoubleSide,
       });
       const mesh = new THREE.Mesh(planeGeo, planeMat);
@@ -131,14 +177,16 @@ export default class ThreeTemplate7 extends BaseClass {
     });
   }
 
-  // 兰博基尼模型
+  // 大众汽车模型
   createModel() {
-    this.mtlLoader.load(lamborghiniMtl, (mtl) => {
+    // 材质
+    this.mtlLoader.load(volkswagenMtl, (mtl) => {
       mtl.preload();
       this.objLoader.setMaterials(mtl);
-      this.objLoader.load(lamborghini, (group) => {
-        group.rotation.x = Math.PI * -0.5;
-        group.scale.set(0.05, 0.05, 0.05);
+      // 模型
+      this.objLoader.load(volkswagen, (group) => {
+        console.log('group', group);
+        group.scale.set(0.01, 0.01, 0.01);
         this.scene.add(group);
         this.render();
       });

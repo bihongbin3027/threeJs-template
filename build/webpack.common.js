@@ -18,8 +18,11 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'tsx',
+          target: 'es2015',
+        },
       },
       {
         test: /\.(png|jpg|gif|jpeg|webp|svg|eot|gltf|ttf|woff|woff2|obj|mtl)$/,

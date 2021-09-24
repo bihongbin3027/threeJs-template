@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-08-12 09:14:00
  * @LastEditors bihongbin
- * @LastEditTime 2021-08-19 18:21:38
+ * @LastEditTime 2021-09-24 11:02:45
  */
 import * as THREE from 'three';
 import { GUI } from 'dat.gui';
@@ -58,6 +58,7 @@ class BaseClass {
   resizePerspectiveCameraDisplaySize(
     renderer: THREE.WebGLRenderer,
     camera?: THREE.PerspectiveCamera,
+    scene?: THREE.Scene,
   ) {
     const resize = () => {
       const canvas = renderer.domElement;
@@ -69,11 +70,14 @@ class BaseClass {
       const height = (clientHeight * pixelRatio) | 0;
       const needResize = canvas.width !== width || canvas.height !== height;
       if (needResize) {
+        renderer.setSize(width, height, false);
         if (camera) {
           camera.aspect = clientWidth / clientHeight;
           camera.updateProjectionMatrix();
+          if (scene) {
+            renderer.render(scene, camera);
+          }
         }
-        renderer.setSize(width, height, false);
       }
     };
     resize();
