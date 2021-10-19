@@ -3,33 +3,17 @@
  * @Author bihongbin
  * @Date 2021-09-23 10:10:46
  * @LastEditors bihongbin
- * @LastEditTime 2021-09-24 13:58:36
+ * @LastEditTime 2021-10-13 10:58:30
  */
 import * as THREE from 'three';
-import { GUI } from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import BaseClass from '@/baseClass';
 
-const checker = require('@/assets/images/checker.png');
+// const checker = require('@/assets/images/checker.png');
 const volkswagenMtl = require('@/assets/model/volkswagen/car.mtl');
 const volkswagen = require('@/assets/model/volkswagen/car.obj');
-
-class ColorGUIHelper {
-  object: THREE.DirectionalLight;
-  prop: 'color';
-  constructor(object: ColorGUIHelper['object'], prop: ColorGUIHelper['prop']) {
-    this.object = object;
-    this.prop = prop;
-  }
-  get value() {
-    return `#${this.object[this.prop].getHexString()}`;
-  }
-  set value(hexString) {
-    this.object[this.prop].set(hexString);
-  }
-}
 
 export default class ThreeTemplate7 extends BaseClass {
   // 场景
@@ -73,7 +57,11 @@ export default class ThreeTemplate7 extends BaseClass {
 
   // 渲染器
   createCanvas() {
-    const canvas = new THREE.WebGLRenderer();
+    const canvas = new THREE.WebGLRenderer({
+      // 消除锯齿
+      antialias: true,
+    });
+    canvas.setClearColor(0x666666);
     document.body.appendChild(canvas.domElement);
     return canvas;
   }
@@ -110,71 +98,59 @@ export default class ThreeTemplate7 extends BaseClass {
 
   // 光
   createLight() {
+    // 环境光
+    const ambient = new THREE.AmbientLight(0x666666, 0.75);
+    this.scene.add(ambient);
+
     // 平行光
-    const color = 0xffffff;
-    const intensity = 0.75;
-    const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(0, 10, 50);
-    this.scene.add(light);
-
-    const helper = new THREE.DirectionalLightHelper(light, 5);
-    this.scene.add(helper);
-    const updateLight = () => {
-      light.target.updateMatrixWorld();
-      helper.update();
-      this.render();
-    };
-    const makeXYZGUI = (
-      gui: GUI,
-      vector3: THREE.Vector3,
-      name: string,
-      onChangeFn: () => void,
-    ) => {
-      const folder = gui.addFolder(name);
-      folder.add(vector3, 'x', -10, 10).onChange(onChangeFn);
-      folder.add(vector3, 'y', 0, 10).onChange(onChangeFn);
-      folder.add(vector3, 'z', -10, 50).onChange(onChangeFn);
-      folder.open();
-    };
-
-    const gui = new GUI();
-    gui
-      .addColor(new ColorGUIHelper(light, 'color'), 'value')
-      .name('color')
-      .onChange(updateLight);
-    gui.add(light, 'intensity', 0, 2, 0.01).onChange(updateLight);
-
-    makeXYZGUI(gui, light.position, 'position', updateLight);
-    makeXYZGUI(gui, light.target.position, 'target', updateLight);
+    const directional = new THREE.DirectionalLight(0x989898, 0.75);
+    directional.position.set(0, 30, 0);
+    this.scene.add(directional);
   }
 
   // 地面
   createGround() {
     // 地面贴图
-    this.textureLoader.load(checker, (texture) => {
-      const repeats = this.planeSize / 2;
-      // 贴图水平方向包裹方式
-      texture.wrapS = THREE.RepeatWrapping;
-      // 贴图垂直方向包裹方式
-      texture.wrapT = THREE.RepeatWrapping;
-      // 使用最接近的贴图的值
-      texture.magFilter = THREE.NearestFilter;
-      // x,y方向重复多少次
-      texture.repeat.set(repeats, repeats);
+    // this.textureLoader.load(checker, (texture) => {
+    //   const repeats = this.planeSize / 2;
+    //   // 贴图水平方向包裹方式
+    //   texture.wrapS = THREE.RepeatWrapping;
+    //   // 贴图垂直方向包裹方式
+    //   texture.wrapT = THREE.RepeatWrapping;
+    //   // 使用最接近的贴图的值
+    //   texture.magFilter = THREE.NearestFilter;
+    //   // x,y方向重复多少次
+    //   texture.repeat.set(repeats, repeats);
 
-      // 平面体
-      const planeGeo = new THREE.PlaneGeometry(this.planeSize, this.planeSize);
-      // 材质
-      const planeMat = new THREE.MeshBasicMaterial({
-        map: texture,
-        // 双面材质
-        side: THREE.DoubleSide,
-      });
-      const mesh = new THREE.Mesh(planeGeo, planeMat);
-      mesh.rotation.x = Math.PI * -0.5;
-      this.scene.add(mesh);
-      this.render();
-    });
+    //   // 平面体
+    //   const planeGeo = new THREE.PlaneGeometry(this.planeSize, this.planeSize);
+    //   // 材质
+    //   const planeMat = new THREE.MeshBasicMaterial({
+    //     map: texture,
+    //     // 双面材质
+    //     side: THREE.DoubleSide,
+    //   });
+    //   const mesh = new THREE.Mesh(planeGeo, planeMat);
+    //   mesh.rotation.x = Math.PI * -0.5;
+    //   this.scene.add(mesh);
+    //   this.render();
+    // });
+
+    // 网格辅助对象
+    const grid = new THREE.GridHelper(this.planeSize, 40);
+    grid.material.opacity = 0.5;
+    grid.material.transparent = true;
+    this.scene.add(grid);
+
+    // 地面
+    const planeGeometry = new THREE.PlaneGeometry(
+      this.planeSize,
+      this.planeSize,
+    );
+    const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    plane.rotation.x = Math.PI * -0.5;
+    this.scene.add(plane);
   }
 
   // 大众汽车模型
