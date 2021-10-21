@@ -1,4 +1,4 @@
-import temp from '@/example/temp7';
+import temp from '@/example/temp8';
 import '@/style/global.css';
 
 new temp().render();
