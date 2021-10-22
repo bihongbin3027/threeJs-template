@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-10-20 09:32:37
  * @LastEditors bihongbin
- * @LastEditTime 2021-10-21 17:14:43
+ * @LastEditTime 2021-10-22 16:27:14
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -138,13 +138,60 @@ export default class ThreeTemplate8 extends BaseClass {
       upperGroup.name = 'body';
 
       {
+        // 前后
+        const getCarBeforeAndAfterTexture = () => {
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.width = 64;
+          canvas.height = 32;
+
+          context.fillStyle = '#ffffff';
+          context.fillRect(0, 0, 64, 32);
+
+          context.fillStyle = '#666666';
+          context.fillRect(8, 8, 48, 24);
+
+          return new THREE.CanvasTexture(canvas);
+        };
+        // 左右
+        const getCarSideTexture = () => {
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.width = 128;
+          canvas.height = 32;
+
+          context.fillStyle = '#ffffff';
+          context.fillRect(0, 0, 128, 32);
+
+          context.fillStyle = '#666666';
+          context.fillRect(10, 8, 38, 24);
+          context.fillRect(58, 8, 60, 24);
+
+          return new THREE.CanvasTexture(canvas);
+        };
+
+        const carBeforeAndAfterTexture = getCarBeforeAndAfterTexture();
+        const carSideTexture = getCarSideTexture();
+
         const geometry = new THREE.BoxBufferGeometry(
           carWidth / 1.5,
           carHeight * (2.3 / 5),
           carLength / 2,
         );
-        const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
-        const mesh = new THREE.Mesh(geometry, material);
+        const mesh = new THREE.Mesh(geometry, [
+          // 左
+          new THREE.MeshLambertMaterial({ map: carSideTexture }),
+          // 右
+          new THREE.MeshLambertMaterial({ map: carSideTexture }),
+          // 上
+          new THREE.MeshLambertMaterial({ color: 0xffffff }),
+          // 下
+          new THREE.MeshLambertMaterial({ color: 0xffffff }),
+          // 后
+          new THREE.MeshLambertMaterial({ map: carBeforeAndAfterTexture }),
+          // 前
+          new THREE.MeshLambertMaterial({ map: carBeforeAndAfterTexture }),
+        ]);
         mesh.position.y = carHeight / 2;
         mesh.position.z = -carLength / 15;
         upperGroup.add(mesh);
