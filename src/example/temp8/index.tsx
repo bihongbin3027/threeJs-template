@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-10-20 09:32:37
  * @LastEditors bihongbin
- * @LastEditTime 2021-10-22 16:27:14
+ * @LastEditTime 2021-10-22 18:05:20
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -146,7 +146,7 @@ export default class ThreeTemplate8 extends BaseClass {
           canvas.height = 32;
 
           context.fillStyle = '#ffffff';
-          context.fillRect(0, 0, 64, 32);
+          context.fillRect(0, 0, canvas.width, canvas.height);
 
           context.fillStyle = '#666666';
           context.fillRect(8, 8, 48, 24);
@@ -161,7 +161,7 @@ export default class ThreeTemplate8 extends BaseClass {
           canvas.height = 32;
 
           context.fillStyle = '#ffffff';
-          context.fillRect(0, 0, 128, 32);
+          context.fillRect(0, 0, canvas.width, canvas.height);
 
           context.fillStyle = '#666666';
           context.fillRect(10, 8, 38, 24);
@@ -187,9 +187,9 @@ export default class ThreeTemplate8 extends BaseClass {
           new THREE.MeshLambertMaterial({ color: 0xffffff }),
           // 下
           new THREE.MeshLambertMaterial({ color: 0xffffff }),
-          // 后
-          new THREE.MeshLambertMaterial({ map: carBeforeAndAfterTexture }),
           // 前
+          new THREE.MeshLambertMaterial({ map: carBeforeAndAfterTexture }),
+          // 后
           new THREE.MeshLambertMaterial({ map: carBeforeAndAfterTexture }),
         ]);
         mesh.position.y = carHeight / 2;
