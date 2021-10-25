@@ -3,14 +3,14 @@
  * @Author bihongbin
  * @Date 2021-08-12 09:14:00
  * @LastEditors bihongbin
- * @LastEditTime 2021-09-24 11:02:45
+ * @LastEditTime 2021-10-25 16:00:01
  */
 import * as THREE from 'three';
 import { GUI } from 'dat.gui';
 
 // 坐标轴和网格
 class AxisGridHelper {
-  _visible: boolean;
+  _visible!: boolean;
   axes: THREE.AxesHelper;
   grid: THREE.GridHelper;
 
@@ -40,7 +40,7 @@ class AxisGridHelper {
 }
 
 class BaseClass {
-  gui: GUI;
+  gui!: GUI;
 
   constructor() {}
 

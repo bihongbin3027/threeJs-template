@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-10-20 09:32:37
  * @LastEditors bihongbin
- * @LastEditTime 2021-10-22 18:05:20
+ * @LastEditTime 2021-10-25 16:56:12
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -106,8 +106,6 @@ export default class ThreeTemplate8 extends BaseClass {
       this.planeSize,
       0x000000,
     );
-    gridHelp.material.opacity = 0.5;
-    gridHelp.material.transparent = true;
     this.scene.add(gridHelp);
 
     // 地面

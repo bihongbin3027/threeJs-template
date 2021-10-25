@@ -1,4 +1,6 @@
-import temp from '@/example/temp8';
-import '@/style/global.css';
+import { createApp } from 'vue';
+import App from './App.vue';
+import './index.scss';
 
-new temp().render();
+const app = createApp(App);
+app.mount('#app');

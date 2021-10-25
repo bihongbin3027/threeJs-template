@@ -1,28 +1,26 @@
-const path = require('path');
+const { resolve } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-// 必须定义resolve
-function resolve(dir) {
-  return path.join(__dirname, dir);
-}
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader/dist/index');
 
 module.exports = {
   entry: {
     bundle: './src/index.ts',
   },
-  output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, '../dist'),
-  },
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        loader: 'esbuild-loader',
-        options: {
-          loader: 'tsx',
-          target: 'es2015',
-        },
+        test: /\.vue$/,
+        loader: 'vue-loader',
+      },
+      {
+        test: /\.(t|j)s$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+          },
+        ],
       },
       {
         test: /\.(png|jpg|gif|jpeg|webp|svg|eot|gltf|ttf|woff|woff2|obj|mtl)$/,
@@ -43,10 +41,19 @@ module.exports = {
     ],
   },
   resolve: {
+    // 引入文件可以不写后缀
+    extensions: ['.js', '.vue', '.ts', '.tsx'],
+    // 别名
     alias: {
-      '@': path.resolve('src'),
+      '@': resolve('src'),
     },
-    extensions: ['.tsx', '.ts', '.js'],
   },
-  plugins: [new HtmlWebpackPlugin()],
+  plugins: [
+    // 请确保引入这个插件来施展魔法
+    new VueLoaderPlugin(),
+    // index.html
+    new HtmlWebpackPlugin(),
+    // 在单独的进程上运行TypeScript类型检查器的Webpack插件
+    new ForkTsCheckerWebpackPlugin()
+  ],
 };

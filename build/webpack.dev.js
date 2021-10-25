@@ -1,31 +1,40 @@
-const webpack = require('webpack');
+const { resolve } = require('path')
 const { merge } = require('webpack-merge');
 const commonConfig = require('./webpack.common');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 const devConfig = {
   mode: 'development',
   output: {
-    publicPath: '/',
+    filename: 'js/[name].[hash].js',
+    path: resolve(__dirname, '../dist'),
   },
-  devtool: 'eval-source-map',
+  devtool: 'inline-source-map',
   devServer: {
     open: true,
     hot: true,
   },
-  // webpack的性能提示
-  performance: {
-    // 开发环境不启用
-    hints: false,
+  cache: {
+    // 持久化缓存
+    type: 'filesystem',
   },
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          // 'postcss-loader',
+          'sass-loader',
+        ],
       },
     ],
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    // 更好的显示开发报错信息
+    new FriendlyErrorsWebpackPlugin()
+  ],
 };
 
 module.exports = merge(commonConfig, devConfig);
