@@ -5,15 +5,15 @@
  * @LastEditors bihongbin
  * @LastEditTime 2021-10-25 14:23:07
  */
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
-import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
-import BaseClass from '@/baseClass';
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
+import BaseClass from "@/baseClass";
 
 // const checker = require('@/assets/images/checker.png');
-const volkswagenMtl = require('@/assets/model/volkswagen/car.mtl');
-const volkswagen = require('@/assets/model/volkswagen/car.obj');
+const volkswagenMtl = require("@/assets/model/volkswagen/car.mtl");
+const volkswagen = require("@/assets/model/volkswagen/car.obj");
 
 export default class ThreeTemplate7 extends BaseClass {
   // 场景
@@ -82,7 +82,7 @@ export default class ThreeTemplate7 extends BaseClass {
   // 轨道控制器
   createOrbitControls() {
     const controls = new OrbitControls(this.camera, this.canvas.domElement);
-    controls.addEventListener('change', this.render.bind(this));
+    controls.addEventListener("change", this.render.bind(this));
     return controls;
   }
 
@@ -143,7 +143,7 @@ export default class ThreeTemplate7 extends BaseClass {
     // 地面
     const planeGeometry = new THREE.PlaneGeometry(
       this.planeSize,
-      this.planeSize,
+      this.planeSize
     );
     const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -159,7 +159,7 @@ export default class ThreeTemplate7 extends BaseClass {
       this.objLoader.setMaterials(mtl);
       // 模型
       this.objLoader.load(volkswagen, (group) => {
-        console.log('group', group);
+        console.log("group", group);
         group.scale.set(0.01, 0.01, 0.01);
         this.scene.add(group);
         this.render();

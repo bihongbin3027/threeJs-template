@@ -1,18 +1,32 @@
 <template>
-  <div id="app">hello</div>
+  <div class="container">
+    <div id="canvas" />
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
-import temp from '@/example/temp7';
+import { defineComponent, onMounted, reactive, toRefs } from "vue";
+import temp from "@/example/temp8";
 
 export default defineComponent({
   setup() {
     const data = reactive({
       show: true,
     });
-    new temp().render();
+
+    onMounted(() => {
+      new temp({
+        el: "canvas",
+      }).render();
+    });
+
     return { ...toRefs(data) };
   },
 });
 </script>
+
+<style lang="sass">
+.container {
+  display: flex;
+}
+</style>

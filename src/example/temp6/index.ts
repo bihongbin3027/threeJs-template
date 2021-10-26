@@ -5,11 +5,11 @@
  * @LastEditors bihongbin
  * @LastEditTime 2021-09-22 15:38:38
  */
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import BaseClass from '@/baseClass';
-import checker from '@/assets/images/checker.png';
-import roundShadow from '@/assets/images/roundshadow.png';
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import BaseClass from "@/baseClass";
+import checker from "@/assets/images/checker.png";
+import roundShadow from "@/assets/images/roundshadow.png";
 
 export default class ThreeTemplate6 extends BaseClass {
   // 场景
@@ -30,7 +30,7 @@ export default class ThreeTemplate6 extends BaseClass {
     base: THREE.Object3D;
     sphereMesh: THREE.Mesh;
     shadowMesh: THREE.Mesh;
-    y: THREE.Vector3['y'];
+    y: THREE.Vector3["y"];
   }[] = [];
 
   constructor() {
@@ -51,7 +51,7 @@ export default class ThreeTemplate6 extends BaseClass {
   // 场景
   createScene() {
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('white');
+    scene.background = new THREE.Color("white");
     return scene;
   }
 
@@ -146,7 +146,7 @@ export default class ThreeTemplate6 extends BaseClass {
     const sphereGeo = new THREE.SphereGeometry(
       sphereRadius,
       sphereWidthDivisions,
-      sphereHeightDivisions,
+      sphereHeightDivisions
     );
     // 水平面(放阴影)
     const shadowGeo = new THREE.PlaneGeometry(1, 1);
@@ -214,7 +214,7 @@ export default class ThreeTemplate6 extends BaseClass {
         base.position.set(
           Math.cos(angle) * radius,
           0,
-          Math.sin(angle) * radius,
+          Math.sin(angle) * radius
         );
 
         sphereMesh.position.y = y + THREE.MathUtils.lerp(-2, 2, yOff);

@@ -5,7 +5,7 @@
  * @LastEditors bihongbin
  * @LastEditTime 2021-08-13 15:05:01
  */
-import * as THREE from 'three';
+import * as THREE from "three";
 
 export default class ThreeTemplate2 {
   // 渲染器
@@ -49,7 +49,7 @@ export default class ThreeTemplate2 {
       45,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000,
+      1000
     );
     camera.position.set(-30, 40, 30);
     camera.lookAt(this.scene.position);

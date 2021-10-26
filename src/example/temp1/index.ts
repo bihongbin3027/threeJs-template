@@ -5,8 +5,8 @@
  * @LastEditors biHongBin
  * @LastEditTime 2021-08-14 22:43:12
  */
-import * as THREE from 'three';
-import BaseClass from '../../baseClass';
+import * as THREE from "three";
+import BaseClass from "../../baseClass";
 
 export default class ThreeTemplate1 extends BaseClass {
   // 渲染器

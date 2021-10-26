@@ -5,8 +5,8 @@
  * @LastEditors bihongbin
  * @LastEditTime 2021-10-25 16:00:01
  */
-import * as THREE from 'three';
-import { GUI } from 'dat.gui';
+import * as THREE from "three";
+import { GUI } from "dat.gui";
 
 // 坐标轴和网格
 class AxisGridHelper {
@@ -51,14 +51,14 @@ class BaseClass {
     }
 
     const helper = new AxisGridHelper(node, units);
-    this.gui.add(helper, 'visible').name(label);
+    this.gui.add(helper, "visible").name(label);
   }
 
   // 透视摄像机 PerspectiveCamera 自适应渲染
   resizePerspectiveCameraDisplaySize(
     renderer: THREE.WebGLRenderer,
     camera?: THREE.PerspectiveCamera,
-    scene?: THREE.Scene,
+    scene?: THREE.Scene
   ) {
     const resize = () => {
       const canvas = renderer.domElement;
@@ -81,7 +81,7 @@ class BaseClass {
       }
     };
     resize();
-    window.addEventListener('resize', resize);
+    window.addEventListener("resize", resize);
   }
 }
 

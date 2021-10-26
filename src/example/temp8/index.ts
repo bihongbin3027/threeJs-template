@@ -3,11 +3,11 @@
  * @Author bihongbin
  * @Date 2021-10-20 09:32:37
  * @LastEditors bihongbin
- * @LastEditTime 2021-10-25 16:56:12
+ * @LastEditTime 2021-10-26 17:32:14
  */
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import BaseClass from '@/baseClass';
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import BaseClass from "@/baseClass";
 
 export default class ThreeTemplate8 extends BaseClass {
   // 场景
@@ -22,13 +22,13 @@ export default class ThreeTemplate8 extends BaseClass {
   // 地面大小
   planeSize = 30;
 
-  constructor() {
+  constructor(data: { el: string }) {
     super();
 
     // 创建场景
     this.scene = this.createScene();
     // 创建渲染器
-    this.rootCanvas = this.createBodyContainer();
+    this.rootCanvas = this.createBodyContainer(data.el);
     // 创建透视摄像机
     this.camera = this.createPerspectiveCamera();
     // 创建轨道控制器
@@ -57,12 +57,12 @@ export default class ThreeTemplate8 extends BaseClass {
   }
 
   // 渲染器
-  createBodyContainer() {
+  createBodyContainer(el: string) {
     const bodyContainer = new THREE.WebGLRenderer({
       // 消除锯齿
       antialias: true,
     });
-    document.body.appendChild(bodyContainer.domElement);
+    document.getElementById(el).appendChild(bodyContainer.domElement);
     return bodyContainer;
   }
 
@@ -78,7 +78,7 @@ export default class ThreeTemplate8 extends BaseClass {
     super.resizePerspectiveCameraDisplaySize(
       this.rootCanvas,
       camera,
-      this.scene,
+      this.scene
     );
     return camera;
   }
@@ -86,7 +86,7 @@ export default class ThreeTemplate8 extends BaseClass {
   // 创建轨道控制器
   createOrbitControls() {
     const controls = new OrbitControls(this.camera, this.rootCanvas.domElement);
-    controls.addEventListener('change', this.render.bind(this));
+    controls.addEventListener("change", this.render.bind(this));
     return controls;
   }
 
@@ -104,14 +104,14 @@ export default class ThreeTemplate8 extends BaseClass {
     const gridHelp = new THREE.GridHelper(
       this.planeSize,
       this.planeSize,
-      0x000000,
+      0x000000
     );
     this.scene.add(gridHelp);
 
     // 地面
     const planeGeometry = new THREE.PlaneGeometry(
       this.planeSize,
-      this.planeSize,
+      this.planeSize
     );
     const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
     const planeCube = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -128,40 +128,40 @@ export default class ThreeTemplate8 extends BaseClass {
     // 车长
     const carLength = 6;
     const carObject = new THREE.Group();
-    carObject.name = 'car';
+    carObject.name = "car";
 
     // 车身
     const carBody = () => {
       const upperGroup = new THREE.Group();
-      upperGroup.name = 'body';
+      upperGroup.name = "body";
 
       {
         // 前后
         const getCarBeforeAndAfterTexture = () => {
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
           canvas.width = 64;
           canvas.height = 32;
 
-          context.fillStyle = '#ffffff';
+          context.fillStyle = "#ffffff";
           context.fillRect(0, 0, canvas.width, canvas.height);
 
-          context.fillStyle = '#666666';
+          context.fillStyle = "#666666";
           context.fillRect(8, 8, 48, 24);
 
           return new THREE.CanvasTexture(canvas);
         };
         // 左右
         const getCarSideTexture = () => {
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
           canvas.width = 128;
           canvas.height = 32;
 
-          context.fillStyle = '#ffffff';
+          context.fillStyle = "#ffffff";
           context.fillRect(0, 0, canvas.width, canvas.height);
 
-          context.fillStyle = '#666666';
+          context.fillStyle = "#666666";
           context.fillRect(10, 8, 38, 24);
           context.fillRect(58, 8, 60, 24);
 
@@ -174,7 +174,7 @@ export default class ThreeTemplate8 extends BaseClass {
         const geometry = new THREE.BoxBufferGeometry(
           carWidth / 1.5,
           carHeight * (2.3 / 5),
-          carLength / 2,
+          carLength / 2
         );
         const mesh = new THREE.Mesh(geometry, [
           // 左
@@ -199,7 +199,7 @@ export default class ThreeTemplate8 extends BaseClass {
         const geometry = new THREE.BoxGeometry(
           carWidth,
           carHeight * (2.7 / 5),
-          carLength,
+          carLength
         );
         const material = new THREE.MeshLambertMaterial({ color: 0xcd2e2b });
         const mesh = new THREE.Mesh(geometry, material);
@@ -222,13 +222,13 @@ export default class ThreeTemplate8 extends BaseClass {
 
       // 用来存放4个轮胎
       const wheelGroup = new THREE.Group();
-      wheelGroup.name = 'wheel';
+      wheelGroup.name = "wheel";
 
       const geometry = new THREE.TorusGeometry(
         radius,
         tube,
         radialSegments,
-        tubularSegments,
+        tubularSegments
       );
       const material = new THREE.MeshLambertMaterial({ color: 0x333333 });
 

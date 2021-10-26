@@ -5,8 +5,8 @@
  * @LastEditors bihongbin
  * @LastEditTime 2021-08-16 11:59:10
  */
-import * as THREE from 'three';
-import BaseClass from '../../baseClass';
+import * as THREE from "three";
+import BaseClass from "../../baseClass";
 
 export default class ThreeTemplate4 extends BaseClass {
   // 场景
@@ -169,7 +169,7 @@ export default class ThreeTemplate4 extends BaseClass {
       wheelRadius,
       wheelRadius,
       wheelThickness,
-      wheelSegments,
+      wheelSegments
     ); // 圆柱
     const wheelMaterial = new THREE.MeshPhongMaterial({ color: 0x888888 });
     const wheelPositions = [
@@ -205,7 +205,7 @@ export default class ThreeTemplate4 extends BaseClass {
       domePhiStart,
       domePhiEnd,
       domeThetaStart,
-      domeThetaEnd,
+      domeThetaEnd
     );
     const domeMaterial = new THREE.MeshPhongMaterial({ color: 0x6688aa });
     const domeMesh = new THREE.Mesh(domeGeometry, domeMaterial);
@@ -220,7 +220,7 @@ export default class ThreeTemplate4 extends BaseClass {
     const turretGeometry = new THREE.BoxGeometry(
       turretWidth,
       turretHeight,
-      turretLength,
+      turretLength
     );
     const turretMaterial = new THREE.MeshPhongMaterial({ color: 0x6688aa });
     const turretMesh = new THREE.Mesh(turretGeometry, turretMaterial);
@@ -290,12 +290,12 @@ export default class ThreeTemplate4 extends BaseClass {
       this.muster_material.targetMaterial.emissive.setHSL(
         (time * 10) % 1,
         1,
-        0.25,
+        0.25
       );
       this.muster_material.targetMaterial.color.setHSL(
         (time * 10) % 1,
         1,
-        0.25,
+        0.25
       );
 
       // 轮子转动

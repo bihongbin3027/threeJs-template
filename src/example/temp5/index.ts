@@ -5,17 +5,17 @@
  * @LastEditors bihongbin
  * @LastEditTime 2021-10-25 14:18:13
  */
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GUI } from 'dat.gui';
-import BaseClass from '@/baseClass';
-import checker from '@/assets/images/checker.png';
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { GUI } from "dat.gui";
+import BaseClass from "@/baseClass";
+import checker from "@/assets/images/checker.png";
 
 class ColorGUIHelper {
   object: any;
   prop: string;
 
-  constructor(object: ColorGUIHelper['object'], prop: ColorGUIHelper['prop']) {
+  constructor(object: ColorGUIHelper["object"], prop: ColorGUIHelper["prop"]) {
     this.object = object;
     this.prop = prop;
   }
@@ -96,7 +96,7 @@ export default class ThreeTemplate5 extends BaseClass {
     controls.autoRotate = true;
     controls.enableZoom = true;
     controls.enablePan = true;
-    controls.addEventListener('change', this.render.bind(this));
+    controls.addEventListener("change", this.render.bind(this));
     return controls;
   }
 
@@ -118,12 +118,12 @@ export default class ThreeTemplate5 extends BaseClass {
         gui: GUI,
         vector3: THREE.Vector3,
         name: keyof THREE.DirectionalLight,
-        onChangeFn: (value?: any) => void,
+        onChangeFn: (value?: any) => void
       ) => {
         const folder = gui.addFolder(name);
-        folder.add(vector3, 'x', -10, 10).onChange(onChangeFn);
-        folder.add(vector3, 'y', 0, 10).onChange(onChangeFn);
-        folder.add(vector3, 'z', -10, 10).onChange(onChangeFn);
+        folder.add(vector3, "x", -10, 10).onChange(onChangeFn);
+        folder.add(vector3, "y", 0, 10).onChange(onChangeFn);
+        folder.add(vector3, "z", -10, 10).onChange(onChangeFn);
         folder.open();
       };
       const updateLight = () => {
@@ -134,12 +134,12 @@ export default class ThreeTemplate5 extends BaseClass {
 
       const gui = new GUI();
       gui
-        .addColor(new ColorGUIHelper(light, 'color'), 'value')
+        .addColor(new ColorGUIHelper(light, "color"), "value")
         .onChange(updateLight)
-        .name('color');
-      gui.add(light, 'intensity', 0, 2, 0.01).onChange(updateLight);
-      makeXYZGUI(gui, light.position, 'position', updateLight);
-      makeXYZGUI(gui, light.target.position, 'target', updateLight);
+        .name("color");
+      gui.add(light, "intensity", 0, 2, 0.01).onChange(updateLight);
+      makeXYZGUI(gui, light.position, "position", updateLight);
+      makeXYZGUI(gui, light.target.position, "target", updateLight);
 
       updateLight();
     }
@@ -159,7 +159,7 @@ export default class ThreeTemplate5 extends BaseClass {
       {
         const planeGeo = new THREE.PlaneGeometry(
           this.planeSize,
-          this.planeSize,
+          this.planeSize
         );
         const planeMat = new THREE.MeshPhongMaterial({
           map: texture,
@@ -182,7 +182,7 @@ export default class ThreeTemplate5 extends BaseClass {
     {
       const cubeSize = 4;
       const cubeGeo = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-      const cubeMat = new THREE.MeshPhongMaterial({ color: '#8ac' });
+      const cubeMat = new THREE.MeshPhongMaterial({ color: "#8ac" });
       const mesh = new THREE.Mesh(cubeGeo, cubeMat);
       mesh.position.set(cubeSize + 1, cubeSize / 2, 0);
       this.scene.add(mesh);
@@ -195,9 +195,9 @@ export default class ThreeTemplate5 extends BaseClass {
       const sphereGeo = new THREE.SphereBufferGeometry(
         sphereRadius,
         sphereWidthDivisions,
-        sphereHeightDivisions,
+        sphereHeightDivisions
       );
-      const sphereMat = new THREE.MeshPhongMaterial({ color: '#ca8' });
+      const sphereMat = new THREE.MeshPhongMaterial({ color: "#ca8" });
       const mesh = new THREE.Mesh(sphereGeo, sphereMat);
       mesh.position.set(-sphereRadius - 1, sphereRadius + 2, 0);
       this.scene.add(mesh);

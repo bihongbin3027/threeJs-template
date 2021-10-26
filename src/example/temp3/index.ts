@@ -5,8 +5,8 @@
  * @LastEditors biHongBin
  * @LastEditTime 2021-08-14 23:22:49
  */
-import * as THREE from 'three';
-import BaseClass from '../../baseClass';
+import * as THREE from "three";
+import BaseClass from "../../baseClass";
 
 export default class ThreeTemplate3 extends BaseClass {
   // 场景
@@ -74,7 +74,7 @@ export default class ThreeTemplate3 extends BaseClass {
     const sphereGeometry = new THREE.SphereGeometry(
       radius,
       widthSegments,
-      heightSegments,
+      heightSegments
     );
     return sphereGeometry;
   }
@@ -86,8 +86,8 @@ export default class ThreeTemplate3 extends BaseClass {
     sunMesh.scale.set(5, 5, 5); // 扩大太阳的大小
     this.solarSystem.add(sunMesh);
     this.objects.push(this.solarSystem);
-    super.makeAxisGrid(this.solarSystem, 'solarSystem', 26);
-    super.makeAxisGrid(sunMesh, 'sunMesh');
+    super.makeAxisGrid(this.solarSystem, "solarSystem", 26);
+    super.makeAxisGrid(sunMesh, "sunMesh");
   }
 
   // 创建地球
@@ -100,8 +100,8 @@ export default class ThreeTemplate3 extends BaseClass {
     this.earthOrbit.add(earthMesh);
     this.solarSystem.add(this.earthOrbit);
     this.objects.push(this.earthOrbit);
-    super.makeAxisGrid(this.earthOrbit, 'earthOrbit');
-    super.makeAxisGrid(earthMesh, 'sunMesh');
+    super.makeAxisGrid(this.earthOrbit, "earthOrbit");
+    super.makeAxisGrid(earthMesh, "sunMesh");
   }
 
   // 创建月亮
@@ -115,8 +115,8 @@ export default class ThreeTemplate3 extends BaseClass {
     this.moonOrbit.add(moonMesh);
     this.earthOrbit.add(this.moonOrbit);
     this.objects.push(this.moonOrbit);
-    super.makeAxisGrid(this.moonOrbit, 'earthOrbit');
-    super.makeAxisGrid(moonMesh, 'sunMesh');
+    super.makeAxisGrid(this.moonOrbit, "earthOrbit");
+    super.makeAxisGrid(moonMesh, "sunMesh");
   }
 
   // 组织星球

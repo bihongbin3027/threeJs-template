@@ -1,5 +1,4 @@
 {
-  "extends": "./paths.json",
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
@@ -13,6 +12,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "jsx": "preserve",
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -22,8 +22,13 @@
     "skipLibCheck": true,
     "strictPropertyInitialization": false,
     "strictNullChecks": false,
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    },
   },
   "include": [
-    "src"
+    "src",
   ],
+  "exclude": ["node_modules"]
 }
