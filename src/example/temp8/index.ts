@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-10-20 09:32:37
  * @LastEditors bihongbin
- * @LastEditTime 2021-10-26 17:32:14
+ * @LastEditTime 2021-10-29 13:59:29
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -133,7 +133,6 @@ export default class ThreeTemplate8 extends BaseClass {
     // 车身
     const carBody = () => {
       const upperGroup = new THREE.Group();
-      upperGroup.name = "body";
 
       {
         // 前后
@@ -203,6 +202,7 @@ export default class ThreeTemplate8 extends BaseClass {
         );
         const material = new THREE.MeshLambertMaterial({ color: 0xcd2e2b });
         const mesh = new THREE.Mesh(geometry, material);
+        mesh.name = "shell";
         upperGroup.add(mesh);
       }
 
@@ -258,6 +258,28 @@ export default class ThreeTemplate8 extends BaseClass {
     carObject.add(carTire());
 
     this.scene.add(carObject);
+  }
+
+  // 切换车壳颜色
+  updateShellAttr(params: { color: string }) {
+    const shell = this.scene.getObjectByName("shell");
+
+    // @ts-ignore
+    shell.material.color = new THREE.Color(params.color);
+
+    this.render();
+  }
+
+  // 切换轮胎颜色
+  updateTireAttr(params: { color: string }) {
+    const wheel = this.scene.getObjectByName("wheel");
+
+    for (let item of wheel.children) {
+      // @ts-ignore
+      item.material.color = new THREE.Color(params.color);
+    }
+
+    this.render();
   }
 
   // 渲染内容
