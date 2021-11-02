@@ -1,9 +1,9 @@
 /*
- * @Description 创建小车
+ * @Description 小汽车
  * @Author bihongbin
  * @Date 2021-10-20 09:32:37
  * @LastEditors bihongbin
- * @LastEditTime 2021-10-29 13:59:29
+ * @LastEditTime 2021-11-02 15:22:03
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -42,16 +42,22 @@ export default class ThreeTemplate8 extends BaseClass {
   createScene() {
     const scene = new THREE.Scene();
 
-    // 模拟3个坐标轴
+    // 模拟3个坐标轴x,y,z
     const axesHelper = new THREE.AxesHelper(10);
     scene.add(axesHelper);
 
     // 环境光
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
     // 平行光
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 5, 0);
+    const helper = new THREE.DirectionalLightHelper(directionalLight);
+
+    // 投射阴影
+    directionalLight.castShadow = true;
+    scene.add(ambientLight);
     scene.add(directionalLight);
+    scene.add(helper);
 
     return scene;
   }
@@ -62,6 +68,8 @@ export default class ThreeTemplate8 extends BaseClass {
       // 消除锯齿
       antialias: true,
     });
+    // 阴影
+    bodyContainer.shadowMap.enabled = true;
     document.getElementById(el).appendChild(bodyContainer.domElement);
     return bodyContainer;
   }
@@ -73,7 +81,7 @@ export default class ThreeTemplate8 extends BaseClass {
     const near = 0.1;
     const far = 100;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(10, 5, 5);
+    camera.position.set(10, 5, 10);
     // 透视摄像机自适应
     super.resizePerspectiveCameraDisplaySize(
       this.rootCanvas,
@@ -115,6 +123,8 @@ export default class ThreeTemplate8 extends BaseClass {
     );
     const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
     const planeCube = new THREE.Mesh(planeGeometry, planeMaterial);
+    // 接收阴影
+    planeCube.receiveShadow = true;
     planeCube.rotation.x = Math.PI * -0.5;
     this.scene.add(planeCube);
   }
@@ -191,6 +201,8 @@ export default class ThreeTemplate8 extends BaseClass {
         ]);
         mesh.position.y = carHeight / 2;
         mesh.position.z = -carLength / 15;
+        // 投射阴影
+        mesh.castShadow = true;
         upperGroup.add(mesh);
       }
 
@@ -203,6 +215,8 @@ export default class ThreeTemplate8 extends BaseClass {
         const material = new THREE.MeshLambertMaterial({ color: 0xcd2e2b });
         const mesh = new THREE.Mesh(geometry, material);
         mesh.name = "shell";
+        // 投射阴影
+        mesh.castShadow = true;
         upperGroup.add(mesh);
       }
 
@@ -243,6 +257,8 @@ export default class ThreeTemplate8 extends BaseClass {
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(position[0], position[1], position[2]);
         mesh.rotation.y = Math.PI * -0.5;
+        // 投射阴影
+        mesh.castShadow = true;
         wheelGroup.add(mesh);
         return mesh;
       });
