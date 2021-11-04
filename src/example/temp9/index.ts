@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-11-02 16:10:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-11-04 15:07:37
+ * @LastEditTime 2021-11-04 18:16:38
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -14,8 +14,8 @@ import BaseClass from "@/baseClass";
 // 地面材质
 const meadowJpg = require("@/assets/images/meadow.jpg");
 // 建筑
-const buildingMtl = require("/static/model/building/Residential Buildings 001.mtl");
-const buildingModel = require("/static/model/building/Residential Buildings 001.obj");
+const buildingMtl = require("/static/model/building/medieval_house.mtl");
+const buildingModel = require("/static/model/building/medieval_house.obj");
 
 export default class ThreeTemplate9 extends BaseClass {
   // 场景
@@ -131,11 +131,21 @@ export default class ThreeTemplate9 extends BaseClass {
   }
 
   // 建筑
-  createBuilding() {
+  async createBuilding() {
     // OBJLoader
     const objLoader = new OBJLoader();
     // MTLLoader
     const mtlLoader = new MTLLoader();
+
+    // const mtl = await mtlLoader.loadAsync(buildingMtl);
+
+    // const group = await objLoader.loadAsync(buildingModel);
+
+    // objLoader.setMaterials(mtl);
+
+    // this.scene.add(group);
+    // this.render();
+
     mtlLoader.load(buildingMtl, (mtl) => {
       objLoader.setMaterials(mtl);
       objLoader.load(buildingModel, (group) => {
