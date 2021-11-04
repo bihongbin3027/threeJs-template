@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-11-02 16:10:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-11-03 18:25:56
+ * @LastEditTime 2021-11-04 15:07:37
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -14,8 +14,8 @@ import BaseClass from "@/baseClass";
 // 地面材质
 const meadowJpg = require("@/assets/images/meadow.jpg");
 // 建筑
-const buildingMtl = require("@/assets/model/edifice/building/Manor.mtl");
-const buildingModel = require("@/assets/model/edifice/building/Manor.obj");
+const buildingMtl = require("/static/model/building/Residential Buildings 001.mtl");
+const buildingModel = require("/static/model/building/Residential Buildings 001.obj");
 
 export default class ThreeTemplate9 extends BaseClass {
   // 场景

@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-08-18 15:44:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-10-25 14:18:13
+ * @LastEditTime 2021-11-04 15:17:51
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -44,13 +44,13 @@ export default class ThreeTemplate5 extends BaseClass {
   // 地面大小
   planeSize = 40;
 
-  constructor() {
+  constructor(data: { el: string }) {
     super();
 
     // 创建场景
     this.scene = this.createScene();
     // 创建渲染器
-    this.canvas = this.createCanvas();
+    this.canvas = this.createCanvas(data.el);
     // 创建透视摄像机
     this.camera = this.createCamera();
     // 创建轨道控制器
@@ -70,10 +70,10 @@ export default class ThreeTemplate5 extends BaseClass {
   }
 
   // 渲染器
-  createCanvas() {
+  createCanvas(el: string) {
     const canvas = new THREE.WebGLRenderer();
     canvas.setClearColor(0xaaaaaa);
-    document.body.appendChild(canvas.domElement);
+    document.getElementById(el).appendChild(canvas.domElement);
     return canvas;
   }
 

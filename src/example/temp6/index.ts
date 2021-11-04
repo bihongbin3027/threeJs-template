@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-09-14 11:09:18
  * @LastEditors bihongbin
- * @LastEditTime 2021-09-22 15:38:38
+ * @LastEditTime 2021-11-04 15:17:00
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -33,13 +33,13 @@ export default class ThreeTemplate6 extends BaseClass {
     y: THREE.Vector3["y"];
   }[] = [];
 
-  constructor() {
+  constructor(data: { el: string }) {
     super();
 
     // 创建场景
     this.scene = this.createScene();
     // 创建渲染器
-    this.canvas = this.createCanvas();
+    this.canvas = this.createCanvas(data.el);
     // 创建透视摄像机
     this.camera = this.createPerspectiveCamera();
     // 创建轨道控制器
@@ -56,9 +56,9 @@ export default class ThreeTemplate6 extends BaseClass {
   }
 
   // 渲染器
-  createCanvas() {
+  createCanvas(el: string) {
     const canvas = new THREE.WebGLRenderer();
-    document.body.appendChild(canvas.domElement);
+    document.getElementById(el).appendChild(canvas.domElement);
     return canvas;
   }
 

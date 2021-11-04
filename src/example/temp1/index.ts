@@ -2,8 +2,8 @@
  * @Description 多个立方体旋转
  * @Author bihongbin
  * @Date 2021-08-13 09:53:51
- * @LastEditors biHongBin
- * @LastEditTime 2021-08-14 22:43:12
+ * @LastEditors bihongbin
+ * @LastEditTime 2021-11-04 15:21:45
  */
 import * as THREE from "three";
 import BaseClass from "../../baseClass";
@@ -18,10 +18,10 @@ export default class ThreeTemplate1 extends BaseClass {
   // 灯光
   light: THREE.DirectionalLight;
 
-  constructor() {
+  constructor(data: { el: string }) {
     super();
     this.scene = this.createScene(); // 场景
-    this.webGl = this.createRender(); // 渲染器
+    this.webGl = this.createRender(data.el); // 渲染器
     this.camera = this.setCamera(); // 配置摄像机
     this.light = this.addLight(); // 添加灯光
     // 透视摄像机自适应渲染
@@ -36,10 +36,10 @@ export default class ThreeTemplate1 extends BaseClass {
   }
 
   // 渲染器
-  createRender() {
+  createRender(el: string) {
     const renderer = new THREE.WebGLRenderer();
     // renderer.setSize(window.innerWidth, window.innerHeight); // 设置尺寸
-    document.body.appendChild(renderer.domElement);
+    document.getElementById(el).appendChild(renderer.domElement);
     return renderer;
   }
 

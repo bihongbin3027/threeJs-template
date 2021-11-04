@@ -2,8 +2,8 @@
  * @Description 围绕局部空间旋转
  * @Author bihongbin
  * @Date 2021-08-13 14:49:26
- * @LastEditors biHongBin
- * @LastEditTime 2021-08-14 23:22:49
+ * @LastEditors bihongbin
+ * @LastEditTime 2021-11-04 15:19:50
  */
 import * as THREE from "three";
 import BaseClass from "../../baseClass";
@@ -24,12 +24,12 @@ export default class ThreeTemplate3 extends BaseClass {
   // 月亮3D
   moonOrbit = new THREE.Object3D();
 
-  constructor() {
+  constructor(data: { el: string }) {
     super();
     // 创建场景
     this.scene = this.createScene();
     // 创建渲染器
-    this.canvas = this.createCanvas();
+    this.canvas = this.createCanvas(data.el);
     // 创建摄像机
     this.camera = this.createCamera();
     // 透视摄像机自适应渲染
@@ -51,9 +51,9 @@ export default class ThreeTemplate3 extends BaseClass {
   }
 
   // 创建渲染器
-  createCanvas() {
+  createCanvas(el: string) {
     const renderer = new THREE.WebGLRenderer();
-    document.body.appendChild(renderer.domElement);
+    document.getElementById(el).appendChild(renderer.domElement);
     return renderer;
   }
 

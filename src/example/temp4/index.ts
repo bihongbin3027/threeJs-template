@@ -3,7 +3,7 @@
  * @Author biHongBin
  * @Date 2021-08-15 15:37:12
  * @LastEditors bihongbin
- * @LastEditTime 2021-08-16 11:59:10
+ * @LastEditTime 2021-11-04 15:18:42
  */
 import * as THREE from "three";
 import BaseClass from "../../baseClass";
@@ -60,12 +60,12 @@ export default class ThreeTemplate4 extends BaseClass {
     targetMaterial: undefined,
   };
 
-  constructor() {
+  constructor(data: { el: string }) {
     super();
     // 创建场景
     this.scene = this.createScene();
     // 创建渲染器
-    this.canvas = this.createCanvas();
+    this.canvas = this.createCanvas(data.el);
     // 创建透视摄像机
     this.camera = this.createCamera();
     // 透视摄像机自适应渲染
@@ -116,13 +116,13 @@ export default class ThreeTemplate4 extends BaseClass {
   }
 
   // 渲染器
-  createCanvas() {
+  createCanvas(el: string) {
     const renderer = new THREE.WebGLRenderer();
     // 设置颜色
     renderer.setClearColor(0xaaaaaa);
     // 允许在场景中使用阴影贴图
     renderer.shadowMap.enabled = true;
-    document.body.appendChild(renderer.domElement);
+    document.getElementById(el).appendChild(renderer.domElement);
     return renderer;
   }
 

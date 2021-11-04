@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-09-23 10:10:46
  * @LastEditors bihongbin
- * @LastEditTime 2021-10-25 14:23:07
+ * @LastEditTime 2021-11-04 15:15:59
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -12,8 +12,8 @@ import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
 import BaseClass from "@/baseClass";
 
 // const checker = require('@/assets/images/checker.png');
-const volkswagenMtl = require("@/assets/model/volkswagen/car.mtl");
-const volkswagen = require("@/assets/model/volkswagen/car.obj");
+const volkswagenMtl = require("/static/model/car/car.mtl");
+const volkswagen = require("/static/model/car/car.obj");
 
 export default class ThreeTemplate7 extends BaseClass {
   // 场景
@@ -34,13 +34,13 @@ export default class ThreeTemplate7 extends BaseClass {
   // 地面大小
   planeSize = 200;
 
-  constructor() {
+  constructor(data: { el: string }) {
     super();
 
     // 创建场景
     this.scene = this.createScene();
     // 创建渲染器
-    this.canvas = this.createCanvas();
+    this.canvas = this.createCanvas(data.el);
     // 创建透视摄像机
     this.camera = this.createPerspectiveCamera();
     // 创建轨道控制器
@@ -56,13 +56,13 @@ export default class ThreeTemplate7 extends BaseClass {
   }
 
   // 渲染器
-  createCanvas() {
+  createCanvas(el: string) {
     const canvas = new THREE.WebGLRenderer({
       // 消除锯齿
       antialias: true,
     });
     canvas.setClearColor(0x666666);
-    document.body.appendChild(canvas.domElement);
+    document.getElementById(el).appendChild(canvas.domElement);
     return canvas;
   }
 

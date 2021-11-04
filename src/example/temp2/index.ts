@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-08-13 09:55:53
  * @LastEditors bihongbin
- * @LastEditTime 2021-08-13 15:05:01
+ * @LastEditTime 2021-11-04 15:20:53
  */
 import * as THREE from "three";
 
@@ -19,9 +19,9 @@ export default class ThreeTemplate2 {
   // 轴
   axes: THREE.AxesHelper;
 
-  constructor() {
+  constructor(data: { el: string }) {
     this.scene = new THREE.Scene(); // 场景
-    this.webGl = this.createRender(); // 渲染器
+    this.webGl = this.createRender(data.el); // 渲染器
     this.camera = this.createCamera(); // 相机
     this.axes = this.showAxes(); // 轴
     this.light = this.createLight(); // 光
@@ -36,10 +36,10 @@ export default class ThreeTemplate2 {
   }
 
   // 渲染器
-  createRender() {
+  createRender(el: string) {
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight); // 设置尺寸
-    document.body.appendChild(renderer.domElement);
+    document.getElementById(el).appendChild(renderer.domElement);
     return renderer;
   }
 
