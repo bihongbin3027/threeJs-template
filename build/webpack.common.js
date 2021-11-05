@@ -27,7 +27,7 @@ module.exports = {
         test: /\.(png|jpg|gif|jpeg|webp|svg|eot|gltf|ttf|woff|woff2|obj|mtl|fbx)$/,
         use: [
           {
-            loader: "file-loader",
+            loader: "url-loader",
             options: {
               // 把小于10k的文件打成Base64的格式，写入JS
               limit: 10240,

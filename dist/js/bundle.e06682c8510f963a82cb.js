@@ -229,7 +229,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(c
  * @Author bihongbin
  * @Date 2021-11-02 16:10:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-11-04 18:13:06
+ * @LastEditTime 2021-11-05 10:40:44
  */
 
 
@@ -237,11 +237,11 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(c
 
  // 地面材质
 
-var meadowJpg = __webpack_require__(3294); // 建筑
+var meadowJpg = __webpack_require__(4359); // 建筑
 
 
-var buildingMtl = "/static/model/building/medieval_house.mtl";
-var buildingModel = "/static/model/building/medieval_house.obj";
+var buildingMtl = "/static/model/building/house.mtl";
+var buildingModel = "/static/model/building/house.obj";
 
 var ThreeTemplate9 = /*#__PURE__*/function (_BaseClass) {
   (0,inherits/* default */.Z)(ThreeTemplate9, _BaseClass);
@@ -375,23 +375,21 @@ var ThreeTemplate9 = /*#__PURE__*/function (_BaseClass) {
       var _createBuilding = (0,asyncToGenerator/* default */.Z)( /*#__PURE__*/regenerator_default().mark(function _callee() {
         var _this3 = this;
 
-        var objLoader, mtlLoader;
+        var mtlLoader, objLoader;
         return regenerator_default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                // OBJLoader
-                objLoader = new OBJLoader/* OBJLoader */.L(); // MTLLoader
+                // MTLLoader
+                mtlLoader = new MTLLoader/* MTLLoader */.v(); // OBJLoader
 
-                mtlLoader = new MTLLoader/* MTLLoader */.v(); // const mtl = await mtlLoader.loadAsync(buildingMtl);
-                // const group = await objLoader.loadAsync(buildingModel);
-                // objLoader.setMaterials(mtl);
-                // this.scene.add(group);
-                // this.render();
-
+                objLoader = new OBJLoader/* OBJLoader */.L();
                 mtlLoader.load(buildingMtl, function (mtl) {
+                  console.log("mtl", mtl);
                   objLoader.setMaterials(mtl);
                   objLoader.load(buildingModel, function (group) {
+                    console.log("group", group);
+
                     _this3.scene.add(group);
 
                     _this3.render();
@@ -487,7 +485,7 @@ app.mount("#app");
 
 /***/ }),
 
-/***/ 3294:
+/***/ 4359:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/meadow_1685d1fc18dcee0c91d79f3d648547e9.jpg";

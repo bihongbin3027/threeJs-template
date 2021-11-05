@@ -3,19 +3,13 @@
  * @Author bihongbin
  * @Date 2021-11-02 16:10:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-11-04 18:16:38
+ * @LastEditTime 2021-11-05 18:10:33
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
 import BaseClass from "@/baseClass";
-
-// 地面材质
-const meadowJpg = require("@/assets/images/meadow.jpg");
-// 建筑
-const buildingMtl = require("/static/model/building/medieval_house.mtl");
-const buildingModel = require("/static/model/building/medieval_house.obj");
 
 export default class ThreeTemplate9 extends BaseClass {
   // 场景
@@ -28,7 +22,7 @@ export default class ThreeTemplate9 extends BaseClass {
   orbitControls: OrbitControls;
 
   // 地面大小
-  planeSize = 50;
+  planeSize = 100;
 
   constructor(data: { el: string }) {
     super();
@@ -58,7 +52,7 @@ export default class ThreeTemplate9 extends BaseClass {
 
     // 平行光
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(0, 5, 0);
+    directionalLight.position.set(0, 10, 0);
     scene.add(directionalLight);
 
     return scene;
@@ -79,9 +73,9 @@ export default class ThreeTemplate9 extends BaseClass {
     const fov = 45;
     const aspect = window.innerWidth / window.innerHeight;
     const near = 0.1;
-    const far = 100;
+    const far = 1000;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(10, 5, 15);
+    camera.position.set(10, 10, 30);
     // 透视摄像机自适应
     super.resizePerspectiveCameraDisplaySize(
       this.rootCanvas,
@@ -104,11 +98,31 @@ export default class ThreeTemplate9 extends BaseClass {
     this.createGround();
     // 创建建筑
     this.createBuilding();
+    // 创建马路
+    this.createRoad();
+  }
+
+  // 创建obj模型
+  async createObjLoader(param: {
+    mtlPath: string;
+    objPath: string;
+    action: (data: THREE.Group) => void;
+  }) {
+    const mtlLoader = new MTLLoader();
+    const objLoader = new OBJLoader();
+
+    const mtl = await mtlLoader.loadAsync(param.mtlPath);
+    objLoader.setMaterials(mtl);
+    const group = await objLoader.loadAsync(param.objPath);
+    param.action(group);
+
+    this.scene.add(group);
+    this.render();
   }
 
   // 地面
   createGround() {
-    // TextureLoader
+    const meadowJpg = require("@/assets/images/meadow.jpg");
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load(meadowJpg, (texture) => {
       texture.wrapS = THREE.RepeatWrapping;
@@ -131,28 +145,33 @@ export default class ThreeTemplate9 extends BaseClass {
   }
 
   // 建筑
-  async createBuilding() {
-    // OBJLoader
-    const objLoader = new OBJLoader();
-    // MTLLoader
-    const mtlLoader = new MTLLoader();
-
-    // const mtl = await mtlLoader.loadAsync(buildingMtl);
-
-    // const group = await objLoader.loadAsync(buildingModel);
-
-    // objLoader.setMaterials(mtl);
-
-    // this.scene.add(group);
-    // this.render();
-
-    mtlLoader.load(buildingMtl, (mtl) => {
-      objLoader.setMaterials(mtl);
-      objLoader.load(buildingModel, (group) => {
-        this.scene.add(group);
-        this.render();
-      });
+  createBuilding() {
+    this.createObjLoader({
+      mtlPath: "/static/model/building/houseA_obj.mtl",
+      objPath: "/static/model/building/houseA_obj.obj",
+      action: (data) => {
+        data.scale.set(0.1, 0.1, 0.1);
+      },
     });
+  }
+
+  // 马路
+  createRoad() {
+    // var shape = new THREE.Shape();
+    // const width = 2;
+    // const height = 6;
+    // const radius = 2;
+    // shape.moveTo(-width / 2 + radius, height / 2);
+    // shape.lineTo(width / 2 - radius, height / 2);
+    // shape.lineTo(width / 2, height / 2 - radius);
+    // shape.lineTo(width / 2, -height / 2 + radius);
+    // shape.lineTo(width / 2 - radius, -height / 2);
+    // var myGeometry = new THREE.ShapeGeometry(shape);
+    // var myMesh = new THREE.Mesh(
+    //   myGeometry,
+    //   new THREE.MeshBasicMaterial({ color: 0x000000 })
+    // );
+    // this.scene.add(myMesh);
   }
 
   // 渲染内容
