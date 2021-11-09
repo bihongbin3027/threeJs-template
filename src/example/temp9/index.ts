@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-11-02 16:10:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-11-05 18:10:33
+ * @LastEditTime 2021-11-09 17:24:41
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -72,10 +72,10 @@ export default class ThreeTemplate9 extends BaseClass {
   createPerspectiveCamera() {
     const fov = 45;
     const aspect = window.innerWidth / window.innerHeight;
-    const near = 0.1;
-    const far = 1000;
+    const near = 1;
+    const far = 10000;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(10, 10, 30);
+    camera.position.set(0, 150, 0);
     // 透视摄像机自适应
     super.resizePerspectiveCameraDisplaySize(
       this.rootCanvas,
@@ -88,7 +88,6 @@ export default class ThreeTemplate9 extends BaseClass {
   // 创建轨道控制器
   createOrbitControls() {
     const controls = new OrbitControls(this.camera, this.rootCanvas.domElement);
-    controls.addEventListener("change", this.render.bind(this));
     return controls;
   }
 
@@ -117,7 +116,6 @@ export default class ThreeTemplate9 extends BaseClass {
     param.action(group);
 
     this.scene.add(group);
-    this.render();
   }
 
   // 地面
@@ -129,18 +127,25 @@ export default class ThreeTemplate9 extends BaseClass {
       texture.wrapT = THREE.RepeatWrapping;
       texture.repeat.set(this.planeSize, this.planeSize);
 
-      const mesh = new THREE.Mesh(
-        new THREE.PlaneBufferGeometry(this.planeSize, this.planeSize),
-        new THREE.MeshBasicMaterial({
-          map: texture,
-          // 双面材质
-          side: THREE.DoubleSide,
-        })
+      const geometry = new THREE.PlaneBufferGeometry(
+        this.planeSize,
+        this.planeSize
       );
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        // 双面材质
+        side: THREE.DoubleSide,
+      });
+      // 开启多边形偏移
+      material.polygonOffset = true;
+      // 摄像机距离 正值-远离相机 负值-靠近相机
+      material.polygonOffsetFactor = 1;
+      const mesh = new THREE.Mesh(geometry, material);
+      // 渲染顺序（小的先渲染，大的后渲染）
+      mesh.renderOrder = 1;
       mesh.rotation.x = Math.PI * -0.5;
 
       this.scene.add(mesh);
-      this.render();
     });
   }
 
@@ -157,25 +162,62 @@ export default class ThreeTemplate9 extends BaseClass {
 
   // 马路
   createRoad() {
-    // var shape = new THREE.Shape();
-    // const width = 2;
-    // const height = 6;
-    // const radius = 2;
-    // shape.moveTo(-width / 2 + radius, height / 2);
-    // shape.lineTo(width / 2 - radius, height / 2);
-    // shape.lineTo(width / 2, height / 2 - radius);
-    // shape.lineTo(width / 2, -height / 2 + radius);
-    // shape.lineTo(width / 2 - radius, -height / 2);
-    // var myGeometry = new THREE.ShapeGeometry(shape);
-    // var myMesh = new THREE.Mesh(
-    //   myGeometry,
-    //   new THREE.MeshBasicMaterial({ color: 0x000000 })
-    // );
-    // this.scene.add(myMesh);
+    const roadObj = new THREE.Group();
+    const outerRing = this.planeSize / 3;
+    const width = 4;
+    const height = this.planeSize - outerRing * 2;
+    const color = 0x4b5161;
+
+    const roundGeometry = new THREE.CircleGeometry(width / 2, 30, 0, Math.PI);
+    const roundMaterial = new THREE.MeshBasicMaterial({ color });
+    const roundLeftMesh = new THREE.Mesh(roundGeometry, roundMaterial);
+    const roundRightMesh = roundLeftMesh.clone();
+
+    const planeGeometry = new THREE.PlaneGeometry(width, height);
+    const planeMaterial = new THREE.MeshBasicMaterial({ color });
+    const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+
+    // x,y,z
+    const roadPositions = [
+      [this.planeSize / -2 + outerRing, 0, 0],
+      [0, 0, this.planeSize / -2 + outerRing],
+      [this.planeSize / 2 - outerRing, 0, 0],
+      [0, 0, this.planeSize / 2 - outerRing],
+    ];
+
+    roundLeftMesh.position.y = height / 2;
+    roundRightMesh.position.y = (height / 2) * -1;
+    roundRightMesh.rotation.z = Math.PI;
+
+    // 渲染顺序（小的先渲染，大的后渲染）
+    roadObj.renderOrder = 2;
+    roadObj.rotation.x = Math.PI * -0.5;
+
+    roadObj.add(roundLeftMesh);
+    roadObj.add(roundRightMesh);
+    roadObj.add(planeMesh);
+
+    for (let [index, item] of roadPositions.entries()) {
+      const clone = roadObj.clone();
+
+      if (index % 2 !== 0) {
+        clone.rotation.z = Math.PI * 0.5;
+      }
+
+      clone.position.set(item[0], item[1], item[2]);
+      this.scene.add(clone);
+    }
   }
 
   // 渲染内容
   render() {
-    this.rootCanvas.render(this.scene, this.camera);
+    const animation = (time: number) => {
+      console.log("requestAnimationFrame", time);
+
+      this.rootCanvas.render(this.scene, this.camera);
+      requestAnimationFrame(animation);
+    };
+
+    requestAnimationFrame(animation);
   }
 }
