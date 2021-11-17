@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-11-02 16:10:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-11-12 11:57:07
+ * @LastEditTime 2021-11-17 12:01:26
  */
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
@@ -17,7 +17,7 @@ export default class ThreeTemplate9 extends Core {
     super();
 
     // 设置场景（scene, canvas, camera, ground, orbitControls）
-    this.wrapSpeed(data);
+    this.warpSpeed(data);
 
     // 创建内容
     this.createContent();

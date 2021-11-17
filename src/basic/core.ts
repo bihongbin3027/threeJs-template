@@ -1,6 +1,13 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
+interface LightClumpType {
+  // 半球光
+  hemiLight: THREE.HemisphereLight;
+  // 方向光
+  dirLight: THREE.DirectionalLight;
+}
+
 class Core {
   // 场景
   scene: THREE.Scene;
@@ -10,34 +17,42 @@ class Core {
   camera: THREE.PerspectiveCamera;
   // 轨道控制器
   orbitControls: OrbitControls;
+  // 光
+  light: LightClumpType = { hemiLight: undefined, dirLight: undefined };
+  // 天空
+  sky: THREE.Mesh;
+  // 地面
+  ground: THREE.Mesh;
 
   // 场景
   createScene() {
-    const scene = new THREE.Scene();
+    this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color().setHSL(0.6, 0, 1);
+    this.scene.fog = new THREE.Fog(this.scene.background, 1, 5000);
 
     const alesHelper = new THREE.AxesHelper(10);
-    scene.add(alesHelper);
+    this.scene.add(alesHelper);
 
-    // 环境光
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-    scene.add(ambientLight);
-
-    // 平行光
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(0, 10, 0);
-    scene.add(directionalLight);
-
-    return scene;
+    return this.scene;
   }
 
   // 渲染器
   createRootCanvas(el: string) {
-    const rootCanvas = new THREE.WebGLRenderer({
+    this.rootCanvas = new THREE.WebGLRenderer({
       // 消除锯齿
       antialias: true,
     });
-    document.getElementById(el).appendChild(rootCanvas.domElement);
-    return rootCanvas;
+    // 修改输出编码
+    this.rootCanvas.outputEncoding = THREE.sRGBEncoding;
+    // 启用阴影
+    this.rootCanvas.shadowMap.enabled = true;
+    if (el) {
+      document.getElementById(el).appendChild(this.rootCanvas.domElement);
+    } else {
+      document.body.appendChild(this.rootCanvas.domElement);
+    }
+
+    return this.rootCanvas;
   }
 
   // 透视摄像机 PerspectiveCamera 自适应渲染
@@ -75,29 +90,110 @@ class Core {
     const fov = 45;
     const aspect = window.innerWidth / window.innerHeight;
     const near = 0.1;
-    const far = 1000;
-    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(35, 30, 0);
+    const far = 5000;
+    this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    this.camera.position.set(35, 30, 0);
 
     // 透视摄像机自适应
     this.resizePerspectiveCameraDisplaySize(
       this.rootCanvas,
-      camera,
+      this.camera,
       this.scene
     );
 
-    return camera;
+    return this.camera;
   }
 
-  // 创建轨道控制器
+  // 光源
+  createLight() {
+    // 半球光
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
+    hemiLight.color.setHSL(0.6, 1, 0.6);
+    hemiLight.groundColor.setHSL(0.095, 1, 0.75);
+    hemiLight.position.set(0, 50, 0);
+    this.scene.add(hemiLight);
+
+    // 方向光
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+    dirLight.color.setHSL(0.1, 1, 0.95);
+    dirLight.position.set(-1, 1.75, 1);
+    dirLight.position.multiplyScalar(30);
+    dirLight.castShadow = true;
+
+    this.scene.add(dirLight);
+    this.light.hemiLight = hemiLight;
+    this.light.dirLight = dirLight;
+
+    return this.light;
+  }
+
+  // 轨道控制器
   createOrbitControls() {
-    const controls = new OrbitControls(this.camera, this.rootCanvas.domElement);
-    return controls;
+    this.orbitControls = new OrbitControls(
+      this.camera,
+      this.rootCanvas.domElement
+    );
+    return this.orbitControls;
+  }
+
+  // 天空
+  createSky() {
+    const vertexShader = `
+      varying vec3 vWorldPosition;
+
+      void main() {
+
+        vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+        vWorldPosition = worldPosition.xyz;
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+      }
+    `;
+    const fragmentShader = `
+      uniform vec3 topColor;
+      uniform vec3 bottomColor;
+      uniform float offset;
+      uniform float exponent;
+
+      varying vec3 vWorldPosition;
+
+      void main() {
+
+        float h = normalize( vWorldPosition + offset ).y;
+        gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );
+
+      }
+    `;
+    const uniforms = {
+      topColor: { value: new THREE.Color(0x0077ff) },
+      bottomColor: { value: new THREE.Color(0xffffff) },
+      offset: { value: 33 },
+      exponent: { value: 0.6 },
+    };
+
+    uniforms["topColor"].value.copy(this.light.hemiLight.color);
+    this.scene.fog.color.copy(uniforms["bottomColor"].value);
+
+    const skyGeo = new THREE.SphereGeometry(500, 32, 15);
+    const skyMat = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
+      side: THREE.BackSide,
+    });
+    const mesh = new THREE.Mesh(skyGeo, skyMat);
+    mesh.name = "sky";
+
+    this.sky = mesh;
+    this.scene.add(mesh);
+
+    return mesh;
   }
 
   // 地面
   async createGround() {
-    const planeSize = 100;
+    const planeSize = 10000;
     const meadowJpg = require("@/assets/images/meadow.jpg");
     const textureLoader = new THREE.TextureLoader();
     const texture = await textureLoader.loadAsync(meadowJpg);
@@ -117,30 +213,44 @@ class Core {
     // 摄像机距离 正值-远离相机 负值-靠近相机
     material.polygonOffsetFactor = 1;
     const mesh = new THREE.Mesh(geometry, material);
+    mesh.name = "ground";
     // 渲染顺序（小的先渲染，大的后渲染）
     mesh.renderOrder = 1;
     mesh.rotation.x = Math.PI * -0.5;
+    // 可以接收阴影
+    mesh.receiveShadow = true;
+
+    this.ground = mesh;
     this.scene.add(mesh);
 
     return mesh;
   }
 
-  async wrapSpeed(data: { el: string }) {
+  // 核心视图
+  async warpSpeed(data?: { el: string }) {
     // 创建场景
-    this.scene = this.createScene();
+    const scene = this.createScene();
     // 创建渲染器
-    this.rootCanvas = this.createRootCanvas(data.el);
+    const rootCanvas = this.createRootCanvas(data && data.el);
     // 创建透视摄像机
-    this.camera = this.createPerspectiveCamera();
+    const camera = this.createPerspectiveCamera();
+    // 创建光源
+    const light = this.createLight();
     // 创建轨道控制器
-    this.orbitControls = this.createOrbitControls();
+    const orbitControls = this.createOrbitControls();
+    // 天空
+    const sky = this.createSky();
+    // 地面
+    const ground = await this.createGround();
 
     return {
-      scene: this.scene,
-      rootCanvas: this.rootCanvas,
-      camera: this.camera,
-      orbitControls: this.orbitControls,
-      ground: await this.createGround(),
+      scene,
+      rootCanvas,
+      camera,
+      light,
+      orbitControls,
+      sky,
+      ground,
     };
   }
 }
