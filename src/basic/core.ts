@@ -28,6 +28,7 @@ class Core {
   createScene() {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color().setHSL(0.6, 0, 1);
+    // 雾
     this.scene.fog = new THREE.Fog(this.scene.background, 1, 5000);
 
     const alesHelper = new THREE.AxesHelper(10);

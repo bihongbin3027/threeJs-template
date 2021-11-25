@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-11-02 16:10:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-11-17 12:01:26
+ * @LastEditTime 2021-11-25 11:53:51
  */
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
@@ -29,6 +29,8 @@ export default class ThreeTemplate9 extends Core {
     this.createBuilding();
     // 创建马路
     this.createRoad();
+    // 创建汽车
+    this.createCar();
   }
 
   // 创建obj模型
@@ -106,6 +108,142 @@ export default class ThreeTemplate9 extends Core {
       clone.position.set(item[0], item[1], item[2]);
       this.scene.add(clone);
     }
+  }
+
+  // 汽车
+  createCar() {
+    // 车宽
+    const carWidth = 3;
+    // 车高
+    const carHeight = 2;
+    // 车长
+    const carLength = 6;
+
+    const carObject = new THREE.Group();
+    carObject.name = "car";
+
+    carObject.position.x = 10;
+
+    // 车身
+    {
+      {
+        // 前后
+        const getCarBeforeAndAfterTexture = () => {
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+          canvas.width = 64;
+          canvas.height = 32;
+
+          context.fillStyle = "#ffffff";
+          context.fillRect(0, 0, canvas.width, canvas.height);
+
+          context.fillStyle = "#666666";
+          context.fillRect(8, 8, 48, 17);
+
+          return new THREE.CanvasTexture(canvas);
+        };
+        // 左右
+        const getCarSideTexture = () => {
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+          canvas.width = 128;
+          canvas.height = 32;
+
+          context.fillStyle = "#ffffff";
+          context.fillRect(0, 0, canvas.width, canvas.height);
+
+          context.fillStyle = "#666666";
+          context.fillRect(10, 8, 38, 17);
+          context.fillRect(58, 8, 60, 17);
+
+          return new THREE.CanvasTexture(canvas);
+        };
+
+        const carBeforeAndAfterTexture = getCarBeforeAndAfterTexture();
+        const carSideTexture = getCarSideTexture();
+
+        const geometry = new THREE.BoxBufferGeometry(
+          carWidth / 1.5,
+          carHeight / 2,
+          carLength / 2
+        );
+        const mesh = new THREE.Mesh(geometry, [
+          // 左
+          new THREE.MeshLambertMaterial({ map: carSideTexture }),
+          // 右
+          new THREE.MeshLambertMaterial({ map: carSideTexture }),
+          // 上
+          new THREE.MeshLambertMaterial({ color: 0xffffff }),
+          // 下
+          new THREE.MeshLambertMaterial({ color: 0xffffff }),
+          // 前
+          new THREE.MeshLambertMaterial({ map: carBeforeAndAfterTexture }),
+          // 后
+          new THREE.MeshLambertMaterial({ map: carBeforeAndAfterTexture }),
+        ]);
+        mesh.position.y = carHeight / 2;
+        mesh.position.z = -carLength / 15;
+        // 投射阴影
+        mesh.castShadow = true;
+        carObject.add(mesh);
+      }
+
+      {
+        const geometry = new THREE.BoxGeometry(
+          carWidth,
+          carHeight / 2,
+          carLength
+        );
+        const material = new THREE.MeshLambertMaterial({ color: 0xcd2e2b });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.name = "shell";
+        // 投射阴影
+        mesh.castShadow = true;
+        carObject.add(mesh);
+      }
+    }
+
+    // 轮胎
+    {
+      // 圆环半径
+      const radius = 0.4;
+      // 管道半径
+      const tube = radius / 2;
+      // 圆环分段数
+      const radialSegments = 8;
+      // 管道分段数
+      const tubularSegments = 100;
+
+      const geometry = new THREE.TorusGeometry(
+        radius,
+        tube,
+        radialSegments,
+        tubularSegments
+      );
+      const material = new THREE.MeshLambertMaterial({ color: 0x333333 });
+
+      // 4个轮胎位置
+      const wheelPositions = [
+        [-carWidth / 2, -carHeight / 2 + radius, carLength / 3],
+        [carWidth / 2, -carHeight / 2 + radius, carLength / 3],
+        [-carWidth / 2, -carHeight / 2 + radius, -carLength / 3],
+        [carWidth / 2, -carHeight / 2 + radius, -carLength / 3],
+      ];
+      wheelPositions.map((position) => {
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(position[0], position[1], position[2]);
+        mesh.rotation.y = Math.PI * -0.5;
+        // 投射阴影
+        mesh.castShadow = true;
+        carObject.add(mesh);
+        return mesh;
+      });
+
+      // 调整汽车y位置刚好到地面
+      carObject.position.y = carHeight / 2 + tube;
+    }
+
+    this.scene.add(carObject);
   }
 
   // 渲染内容
