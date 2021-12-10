@@ -10,19 +10,19 @@ interface LightClumpType {
 
 class Core {
   // 场景
-  scene: THREE.Scene;
+  public scene: THREE.Scene;
   // 渲染器
-  rootCanvas: THREE.WebGLRenderer;
+  public rootCanvas: THREE.WebGLRenderer;
   // 透视摄像机
-  camera: THREE.PerspectiveCamera;
+  public camera: THREE.PerspectiveCamera;
   // 轨道控制器
-  orbitControls: OrbitControls;
+  public orbitControls: OrbitControls;
   // 光
-  light: LightClumpType = { hemiLight: undefined, dirLight: undefined };
+  public light: LightClumpType = { hemiLight: undefined, dirLight: undefined };
   // 天空
-  sky: THREE.Mesh;
+  public sky: THREE.Mesh;
   // 地面
-  ground: THREE.Mesh;
+  public ground: THREE.Mesh;
 
   // 场景
   createScene() {
@@ -93,7 +93,7 @@ class Core {
     const near = 0.1;
     const far = 5000;
     this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    this.camera.position.set(35, 30, 0);
+    this.camera.position.set(35, 30, 35);
 
     // 透视摄像机自适应
     this.resizePerspectiveCameraDisplaySize(
