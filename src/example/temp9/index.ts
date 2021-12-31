@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-11-02 16:10:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-12-10 11:59:24
+ * @LastEditTime 2021-12-22 17:02:04
  */
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
@@ -126,13 +126,17 @@ export default class ThreeTemplate9 extends Core {
 
       this.walkingLing = new THREE.SplineCurve([
         new THREE.Vector2(height / -2, height / 2),
+        new THREE.Vector2(height / -2, 0),
         new THREE.Vector2(height / -2, height / -2),
+        new THREE.Vector2(0, height / -2),
         new THREE.Vector2(height / 2, height / -2),
+        new THREE.Vector2(height / 2, 0),
         new THREE.Vector2(height / 2, height / 2),
+        new THREE.Vector2(0, height / 2),
         new THREE.Vector2(height / -2, height / 2),
       ]);
 
-      points = this.walkingLing.getPoints(4);
+      points = this.walkingLing.getPoints(8);
       const geometry = new THREE.BufferGeometry().setFromPoints(points);
       const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
       const splineMesh = new THREE.Line(geometry, material);
@@ -278,8 +282,8 @@ export default class ThreeTemplate9 extends Core {
 
   // 渲染内容
   render() {
-    const carPosition = new THREE.Vector2();
-    const carTarget = new THREE.Vector2();
+    let carPosition = new THREE.Vector2();
+    let carTarget = new THREE.Vector2();
 
     const animation = (time: number) => {
       time *= 0.001;
@@ -287,14 +291,14 @@ export default class ThreeTemplate9 extends Core {
       // 移动小汽车
       if (this.walkingLing) {
         const carTime = time * 0.05;
-        this.walkingLing.getPointAt(carTime % 1, carPosition);
-        // console.log("carPosition", carPosition);
-        this.walkingLing.getPointAt((carTime + 0.01) % 1, carTarget);
+
+        this.walkingLing.getPoint(carTime % 1, carPosition);
+        this.walkingLing.getPoint((carTime + 0.01) % 1, carTarget);
 
         this.carObject.position.set(carPosition.x, 1.2, carPosition.y);
         this.carObject.lookAt(carTarget.x, 1.2, carTarget.y);
 
-        console.log("carPosition", carPosition);
+        // console.log("carPosition", carPosition);
         console.log("carTarget", carTarget);
         // this.camera.position.set(carPosition.x - 10, 5, carPosition.y + 5);
         // this.camera.lookAt(carTarget.x - 10, 5, carTarget.y + 5);

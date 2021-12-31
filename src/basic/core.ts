@@ -88,12 +88,12 @@ class Core {
 
   // 透视摄像机
   createPerspectiveCamera() {
-    const fov = 45;
+    const fov = 50;
     const aspect = window.innerWidth / window.innerHeight;
     const near = 0.1;
     const far = 5000;
     this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    this.camera.position.set(35, 30, 35);
+    this.camera.position.set(35, 30, 50);
 
     // 透视摄像机自适应
     this.resizePerspectiveCameraDisplaySize(
