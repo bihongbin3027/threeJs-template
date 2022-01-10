@@ -3,7 +3,7 @@
  * @Author bihongbin
  * @Date 2021-11-02 16:10:03
  * @LastEditors bihongbin
- * @LastEditTime 2021-12-22 17:02:04
+ * @LastEditTime 2022-01-10 16:50:58
  */
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
@@ -53,6 +53,8 @@ export default class ThreeTemplate9 extends Core {
     param.action(group);
 
     this.scene.add(group);
+    // 更新场景
+    this.updateRender();
   }
 
   // 建筑
@@ -90,8 +92,6 @@ export default class ThreeTemplate9 extends Core {
       roundRightMesh.position.y = (height / 2) * -1;
       roundRightMesh.rotation.z = Math.PI;
 
-      // 渲染顺序（小的先渲染，大的后渲染）
-      roadObj.renderOrder = 2;
       roadObj.rotation.x = Math.PI * -0.5;
 
       roadObj.add(roundLeftMesh);
@@ -304,10 +304,12 @@ export default class ThreeTemplate9 extends Core {
         // this.camera.lookAt(carTarget.x - 10, 5, carTarget.y + 5);
       }
 
-      this.rootCanvas.render(this.scene, this.camera);
-      requestAnimationFrame(animation);
+      this.renderer.render(this.scene, this.camera);
+      // requestAnimationFrame(animation);
     };
 
-    requestAnimationFrame(animation);
+    this.renderer.render(this.scene, this.camera);
+
+    // requestAnimationFrame(animation);
   }
 }
