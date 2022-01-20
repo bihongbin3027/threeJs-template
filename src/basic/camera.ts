@@ -34,7 +34,7 @@ function createCamera(_this: Core) {
 
   resize();
   window.addEventListener("resize", resize);
-  camera.position.set(35, 30, 50);
+  camera.position.set(35, 10, 15);
 
   return (_this.camera = camera);
 }

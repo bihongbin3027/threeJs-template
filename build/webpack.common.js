@@ -1,4 +1,5 @@
 const { resolve } = require("path");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
@@ -70,5 +71,10 @@ module.exports = {
     }),
     // 在单独的进程上运行TypeScript类型检查器的Webpack插件
     new ForkTsCheckerWebpackPlugin(),
+    // vue3在编译时被覆盖的全局特性标志
+    new webpack.DefinePlugin({
+      __VUE_OPTIONS_API__: true,
+      __VUE_PROD_DEVTOOLS__: false,
+    }),
   ],
 };

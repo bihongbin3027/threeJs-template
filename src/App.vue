@@ -6,21 +6,19 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
-import temp from "@/example/temp9";
+import temp from "@/example/temp10";
 
 export default defineComponent({
   setup() {
-    let canvas: temp = null;
     const state = reactive({
       visible: false,
     });
 
     // 初始化
     onMounted(() => {
-      canvas = new temp({
+      new temp({
         el: "canvas",
       });
-      canvas.render();
     });
 
     return { ...toRefs(state) };
