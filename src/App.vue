@@ -10,9 +10,7 @@ import temp from "@/example/temp10";
 
 export default defineComponent({
   setup() {
-    const state = reactive({
-      visible: false,
-    });
+    const state = reactive({});
 
     // 初始化
     onMounted(() => {

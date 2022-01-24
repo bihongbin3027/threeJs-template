@@ -89,26 +89,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped lang="scss">
-.container {
-  position: relative;
-  .console-view {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    z-index: 1;
-    background-color: #999;
-    padding: 10px;
-    font-size: 12px;
-    ul {
-      li {
-        margin-bottom: 10px;
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-    }
-  }
-}
-</style>

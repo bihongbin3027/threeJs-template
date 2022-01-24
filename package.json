@@ -61,8 +61,7 @@
   "dependencies": {
     "@babel/runtime": "^7.15.4",
     "@babel/runtime-corejs3": "^7.15.4",
-    "cannon-es": "^0.19.0",
-    "cannon-es-debugger": "^1.0.0",
+    "ammojs-typed": "^1.0.6",
     "core-js": "^3.19.0",
     "dat.gui": "^0.7.7",
     "three": "^0.133.1",
