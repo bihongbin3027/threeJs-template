@@ -1,7 +1,7 @@
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 1548:
+/***/ 4612:
 /***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10,11 +10,11 @@
 var runtime_dom_esm_bundler = __webpack_require__(9963);
 // EXTERNAL MODULE: ./node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js
 var runtime_core_esm_bundler = __webpack_require__(6252);
-;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[6].use[0]!./src/App.vue?vue&type=template&id=833843ec&scoped=true&ts=true
+;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[6].use[0]!./src/App.vue?vue&type=template&id=2b572450&scoped=true&ts=true
 
 
 var _withScopeId = function _withScopeId(n) {
-  return (0,runtime_core_esm_bundler/* pushScopeId */.dD)("data-v-833843ec"), n = n(), (0,runtime_core_esm_bundler/* popScopeId */.Cn)(), n;
+  return (0,runtime_core_esm_bundler/* pushScopeId */.dD)("data-v-2b572450"), n = n(), (0,runtime_core_esm_bundler/* popScopeId */.Cn)(), n;
 };
 
 var _hoisted_1 = {
@@ -33,7 +33,7 @@ var _hoisted_3 = [_hoisted_2];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,runtime_core_esm_bundler/* openBlock */.wg)(), (0,runtime_core_esm_bundler/* createElementBlock */.iD)("div", _hoisted_1, _hoisted_3);
 }
-;// CONCATENATED MODULE: ./src/App.vue?vue&type=template&id=833843ec&scoped=true&ts=true
+;// CONCATENATED MODULE: ./src/App.vue?vue&type=template&id=2b572450&scoped=true&ts=true
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/core-js-stable/object/keys.js
 var object_keys = __webpack_require__(6902);
@@ -60,157 +60,409 @@ var reactivity_esm_bundler = __webpack_require__(2262);
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/core-js-stable/reflect/construct.js
 var construct = __webpack_require__(1068);
 var construct_default = /*#__PURE__*/__webpack_require__.n(construct);
-// EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/helpers/esm/asyncToGenerator.js
-var asyncToGenerator = __webpack_require__(3938);
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/helpers/esm/classCallCheck.js
 var classCallCheck = __webpack_require__(8420);
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/helpers/esm/createClass.js
 var createClass = __webpack_require__(7344);
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/helpers/esm/assertThisInitialized.js
 var assertThisInitialized = __webpack_require__(5281);
-// EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/helpers/esm/get.js + 1 modules
-var get = __webpack_require__(8486);
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/helpers/esm/inherits.js + 1 modules
 var inherits = __webpack_require__(4441);
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/helpers/esm/possibleConstructorReturn.js + 1 modules
 var possibleConstructorReturn = __webpack_require__(1770);
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/helpers/esm/getPrototypeOf.js
 var getPrototypeOf = __webpack_require__(3362);
+// EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/helpers/esm/asyncToGenerator.js
+var asyncToGenerator = __webpack_require__(3938);
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/regenerator/index.js
 var regenerator = __webpack_require__(3109);
 var regenerator_default = /*#__PURE__*/__webpack_require__.n(regenerator);
+// EXTERNAL MODULE: ./node_modules/three/build/three.module.js
+var three_module = __webpack_require__(2212);
+;// CONCATENATED MODULE: ./src/basic/scene.ts
+
+
+/**
+ * @description 创建场景
+ * @author bihongbin
+ * @param {Core} _this 传入Core的this
+ * @return {*} Scene
+ * @Date 2022-01-10 15:53:45
+ */
+function createScene(_this) {
+  var scene = new three_module/* Scene */.xsS();
+  var axesHelper = new three_module/* AxesHelper */.y8_(10);
+  scene.background = new three_module/* Color */.Ilk().setHSL(0.6, 0, 1); // 雾
+
+  scene.fog = new three_module/* Fog */.ybr(scene.background, 1, 5000);
+  scene.add(axesHelper);
+  return _this.scene = scene;
+}
+
+
+;// CONCATENATED MODULE: ./src/basic/renderer.ts
+
+
+/**
+ * @description 创建渲染器
+ * @author bihongbin
+ * @param {*} _this 传入Core的this
+ * @param {string} el dom元素id
+ * @return {*} WebGLRenderer
+ * @Date 2022-01-10 16:09:05
+ */
+function createRenderer(_this, el) {
+  var renderer = new three_module/* WebGLRenderer */.CP7({
+    // 消除锯齿
+    antialias: true
+  }); // 设置设备像素比（防止 HiDPI 显示器模糊）
+
+  renderer.setPixelRatio(window.devicePixelRatio); // 修改输出编码
+
+  renderer.outputEncoding = three_module/* sRGBEncoding */.knz; // 启用阴影
+
+  renderer.shadowMap.enabled = true;
+
+  if (el) {
+    document.getElementById(el).appendChild(renderer.domElement);
+  } else {
+    document.body.appendChild(renderer.domElement);
+  }
+
+  return _this.renderer = renderer;
+}
+
+
+;// CONCATENATED MODULE: ./src/basic/camera.ts
+
+
+/**
+ * @description 创建相机
+ * @author bihongbin
+ * @param {Core} _this 传入Core的this
+ * @return {*} Camera
+ * @Date 2022-01-10 16:11:54
+ */
+function createCamera(_this) {
+  var fov = 50,
+      aspect = window.innerWidth / window.innerHeight,
+      near = 0.1,
+      far = 5000;
+  var camera = new three_module/* PerspectiveCamera */.cPb(fov, aspect, near, far); // 相机自适应
+
+  var resize = function resize() {
+    var canvas = _this.renderer.domElement; // 分辨率倍数
+
+    var pixelRatio = window.devicePixelRatio;
+    var clientWidth = canvas.clientWidth;
+    var clientHeight = canvas.clientHeight;
+    var width = clientWidth * pixelRatio | 0;
+    var height = clientHeight * pixelRatio | 0;
+    var needResize = canvas.width !== width || canvas.height !== height;
+
+    if (needResize) {
+      _this.renderer.setSize(width, height, false);
+
+      camera.aspect = clientWidth / clientHeight;
+      camera.updateProjectionMatrix();
+
+      _this.renderer.render(_this.scene, camera);
+    }
+  };
+
+  resize();
+  window.addEventListener("resize", resize);
+  camera.position.set(35, 10, 15);
+  return _this.camera = camera;
+}
+
+
+// EXTERNAL MODULE: ./node_modules/three/examples/jsm/controls/OrbitControls.js
+var OrbitControls = __webpack_require__(9365);
+;// CONCATENATED MODULE: ./src/basic/orbitControls.ts
+
+
+/**
+ * @description 创建轨道控制器
+ * @author bihongbin
+ * @param {Core} _this 传入Core的this
+ * @return {*} OrbitControls
+ * @Date 2022-01-10 15:52:26
+ */
+function createOrbitControls(_this) {
+  var controls = new OrbitControls/* OrbitControls */.z(_this.camera, _this.renderer.domElement); // 相机向外移动
+
+  controls.maxDistance = 200; // 相机向内移动
+
+  controls.minDistance = 1;
+  controls.addEventListener("change", function () {
+    // 更新场景
+    _this.updateRender();
+  });
+  return _this.orbitControls = controls;
+}
+
+
+;// CONCATENATED MODULE: ./src/basic/light.ts
+/*
+ * @Description 创建灯光
+ * @Author bihongbin
+ * @Date 2022-01-08 17:55:07
+ * @LastEditors bihongbin
+ * @LastEditTime 2022-01-10 16:21:24
+ */
+
+
+/**
+ * @description 创建灯光
+ * @author bihongbin
+ * @param {Core} _this 传入Core的this
+ * @return {*} Light
+ * @Date 2022-01-10 16:20:25
+ */
+function createLight(_this) {
+  // 半球光
+  var hemiLight = new three_module/* HemisphereLight */.vmT(0xffffff, 0xffffff, 0.6);
+  hemiLight.color.setHSL(0.6, 1, 0.6);
+  hemiLight.groundColor.setHSL(0.095, 1, 0.75);
+  hemiLight.position.set(0, 50, 0);
+
+  _this.scene.add(hemiLight); // 方向光
+
+
+  var dirLight = new three_module/* DirectionalLight */.Ox3(0xffffff, 1);
+  dirLight.color.setHSL(0.1, 1, 0.95);
+  dirLight.position.set(-1, 1.75, 1);
+  dirLight.position.multiplyScalar(30); // 阴影投射
+
+  dirLight.castShadow = true;
+
+  _this.scene.add(hemiLight);
+
+  _this.scene.add(dirLight);
+
+  return _this.light = {
+    hemiLight: hemiLight,
+    dirLight: dirLight
+  };
+}
+
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
+var es_function_name = __webpack_require__(8309);
+;// CONCATENATED MODULE: ./src/basic/sky.ts
+
+
+
+/**
+ * @description 创建天空
+ * @author bihongbin
+ * @param {Core} _this 传入Core的this
+ * @return {*} 天空Mesh
+ * @Date 2022-01-10 16:22:44
+ */
+function createSky(_this) {
+  var vertexShader = "\n        varying vec3 vWorldPosition;\n\n        void main() {\n\n          vec4 worldPosition = modelMatrix * vec4( position, 1.0 );\n          vWorldPosition = worldPosition.xyz;\n\n          gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n\n        }\n      ";
+  var fragmentShader = "\n        uniform vec3 topColor;\n        uniform vec3 bottomColor;\n        uniform float offset;\n        uniform float exponent;\n\n        varying vec3 vWorldPosition;\n\n        void main() {\n\n          float h = normalize( vWorldPosition + offset ).y;\n          gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );\n\n        }\n      ";
+  var uniforms = {
+    topColor: {
+      value: new three_module/* Color */.Ilk(0x0077ff)
+    },
+    bottomColor: {
+      value: new three_module/* Color */.Ilk(0xffffff)
+    },
+    offset: {
+      value: 33
+    },
+    exponent: {
+      value: 0.6
+    }
+  };
+  var skyGeo = new three_module/* SphereGeometry */.xo$(500, 32, 15);
+  var skyMat = new three_module/* ShaderMaterial */.jyz({
+    uniforms: uniforms,
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+    side: three_module/* BackSide */._Li
+  });
+  var skyMesh = new three_module/* Mesh */.Kj0(skyGeo, skyMat);
+  skyMesh.name = "sky";
+
+  _this.scene.add(skyMesh);
+
+  return _this.sky = skyMesh;
+}
+
+
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs3/core-js-stable/instance/repeat.js
 var repeat = __webpack_require__(9291);
 var repeat_default = /*#__PURE__*/__webpack_require__.n(repeat);
-// EXTERNAL MODULE: ./node_modules/three/build/three.module.js
-var three_module = __webpack_require__(2212);
-// EXTERNAL MODULE: ./node_modules/three/examples/jsm/controls/OrbitControls.js
-var OrbitControls = __webpack_require__(9365);
-// EXTERNAL MODULE: ./node_modules/three/examples/jsm/loaders/OBJLoader.js
-var OBJLoader = __webpack_require__(7011);
-// EXTERNAL MODULE: ./node_modules/three/examples/jsm/loaders/MTLLoader.js
-var MTLLoader = __webpack_require__(6023);
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
-var es_function_name = __webpack_require__(8309);
-// EXTERNAL MODULE: ./node_modules/dat.gui/build/dat.gui.module.js
-var dat_gui_module = __webpack_require__(4376);
-;// CONCATENATED MODULE: ./src/baseClass/index.ts
+;// CONCATENATED MODULE: ./src/basic/ground.ts
 
 
 
 
 
-/*
- * @Description 超类
- * @Author bihongbin
- * @Date 2021-08-12 09:14:00
- * @LastEditors bihongbin
- * @LastEditTime 2021-10-25 16:00:01
+
+/**
+ * @description 创建地面
+ * @author bihongbin
+ * @param {Core} _this 传入Core的this
+ * @return {*} 地面Mesh
+ * @Date 2022-01-10 16:24:57
  */
+function createGround(_x) {
+  return _createGround.apply(this, arguments);
+}
 
- // 坐标轴和网格
+function _createGround() {
+  _createGround = (0,asyncToGenerator/* default */.Z)( /*#__PURE__*/regenerator_default().mark(function _callee(_this) {
+    var planeSize, meadowJpg, textureLoader, texture, geometry, material, groundMesh;
+    return regenerator_default().wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            planeSize = 10000;
+            meadowJpg = __webpack_require__(4359);
+            textureLoader = new three_module/* TextureLoader */.dpR();
+            _context.next = 5;
+            return textureLoader.loadAsync(meadowJpg);
 
-var AxisGridHelper = /*#__PURE__*/function () {
-  function AxisGridHelper(node) {
-    var units = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
+          case 5:
+            texture = _context.sent;
+            texture.wrapS = three_module/* RepeatWrapping */.rpg;
+            texture.wrapT = three_module/* RepeatWrapping */.rpg;
 
-    (0,classCallCheck/* default */.Z)(this, AxisGridHelper);
+            repeat_default()(texture).set(planeSize, planeSize);
 
-    (0,defineProperty/* default */.Z)(this, "_visible", void 0);
+            geometry = new three_module/* PlaneBufferGeometry */.BKK(planeSize, planeSize);
+            material = new three_module/* MeshBasicMaterial */.vBJ({
+              map: texture,
+              // 双面材质
+              side: three_module/* DoubleSide */.ehD
+            });
+            groundMesh = new three_module/* Mesh */.Kj0(geometry, material);
+            groundMesh.name = "ground";
+            groundMesh.rotation.x = Math.PI * -0.5; // 可以接收阴影
 
-    (0,defineProperty/* default */.Z)(this, "axes", void 0);
+            groundMesh.receiveShadow = true; // 开启多边形偏移
 
-    (0,defineProperty/* default */.Z)(this, "grid", void 0);
+            material.polygonOffset = true; // 多边形偏移 摄像机距离：正值-远离相机 负值-靠近相机
 
-    var axes = new three_module/* AxesHelper */.y8_(); // axes.material.depthTest = false;
+            material.polygonOffsetFactor = 1;
 
-    axes.renderOrder = 2; // after the grid
+            _this.scene.add(groundMesh); // 更新场景
 
-    node.add(axes);
-    var grid = new three_module/* GridHelper */.VLJ(units, units); // grid.material.depthTest = false;
 
-    grid.renderOrder = 1;
-    node.add(grid);
-    this.grid = grid;
-    this.axes = axes;
-    this.visible = false;
+            _this.updateRender();
+
+            return _context.abrupt("return", _this.ground = groundMesh);
+
+          case 20:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _createGround.apply(this, arguments);
+}
+
+
+;// CONCATENATED MODULE: ./src/basic/core.ts
+
+
+
+
+
+
+
+
+
+
+
+
+
+var Core = /*#__PURE__*/function () {
+  function Core() {
+    (0,classCallCheck/* default */.Z)(this, Core);
+
+    (0,defineProperty/* default */.Z)(this, "scene", void 0);
+
+    (0,defineProperty/* default */.Z)(this, "renderer", void 0);
+
+    (0,defineProperty/* default */.Z)(this, "camera", void 0);
+
+    (0,defineProperty/* default */.Z)(this, "orbitControls", void 0);
+
+    (0,defineProperty/* default */.Z)(this, "light", {
+      hemiLight: undefined,
+      dirLight: undefined
+    });
+
+    (0,defineProperty/* default */.Z)(this, "sky", void 0);
+
+    (0,defineProperty/* default */.Z)(this, "ground", void 0);
   }
 
-  (0,createClass/* default */.Z)(AxisGridHelper, [{
-    key: "visible",
-    get: function get() {
-      return this._visible;
-    },
-    set: function set(v) {
-      this._visible = v;
-      this.grid.visible = v;
-      this.axes.visible = v;
-    }
-  }]);
-
-  return AxisGridHelper;
-}();
-
-var BaseClass = /*#__PURE__*/function () {
-  function BaseClass() {
-    (0,classCallCheck/* default */.Z)(this, BaseClass);
-
-    (0,defineProperty/* default */.Z)(this, "gui", void 0);
-  } // 生成坐标轴和网格
-
-
-  (0,createClass/* default */.Z)(BaseClass, [{
-    key: "makeAxisGrid",
-    value: function makeAxisGrid(node, label, units) {
-      if (!this.gui) {
-        this.gui = new dat_gui_module/* GUI */.XS();
-      }
-
-      var helper = new AxisGridHelper(node, units);
-      this.gui.add(helper, "visible").name(label);
-    } // 透视摄像机 PerspectiveCamera 自适应渲染
+  (0,createClass/* default */.Z)(Core, [{
+    key: "updateRender",
+    value: // 更新渲染
+    function updateRender() {
+      this.renderer.render(this.scene, this.camera);
+    } // 设置场景（渲染器、摄像机、光源、轨道控制器、天空、地面）
 
   }, {
-    key: "resizePerspectiveCameraDisplaySize",
-    value: function resizePerspectiveCameraDisplaySize(renderer, camera, scene) {
-      var resize = function resize() {
-        var canvas = renderer.domElement; // 分辨率倍数
+    key: "warpSpeed",
+    value: function () {
+      var _warpSpeed = (0,asyncToGenerator/* default */.Z)( /*#__PURE__*/regenerator_default().mark(function _callee(data) {
+        var scene, renderer, camera, orbitControls, light, sky, ground;
+        return regenerator_default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                scene = createScene(this);
+                renderer = createRenderer(this, data.el);
+                camera = createCamera(this);
+                orbitControls = createOrbitControls(this);
+                light = createLight(this);
+                sky = createSky(this);
+                _context.next = 8;
+                return createGround(this);
 
-        var pixelRatio = window.devicePixelRatio;
-        var clientWidth = canvas.clientWidth;
-        var clientHeight = canvas.clientHeight;
-        var width = clientWidth * pixelRatio | 0;
-        var height = clientHeight * pixelRatio | 0;
-        var needResize = canvas.width !== width || canvas.height !== height;
+              case 8:
+                ground = _context.sent;
+                return _context.abrupt("return", {
+                  scene: scene,
+                  renderer: renderer,
+                  camera: camera,
+                  orbitControls: orbitControls,
+                  light: light,
+                  sky: sky,
+                  ground: ground
+                });
 
-        if (needResize) {
-          renderer.setSize(width, height, false);
-
-          if (camera) {
-            camera.aspect = clientWidth / clientHeight;
-            camera.updateProjectionMatrix();
-
-            if (scene) {
-              renderer.render(scene, camera);
+              case 10:
+              case "end":
+                return _context.stop();
             }
           }
-        }
-      };
+        }, _callee, this);
+      }));
 
-      resize();
-      window.addEventListener("resize", resize);
-    }
+      function warpSpeed(_x) {
+        return _warpSpeed.apply(this, arguments);
+      }
+
+      return warpSpeed;
+    }()
   }]);
 
-  return BaseClass;
+  return Core;
 }();
 
-/* harmony default export */ var baseClass = (BaseClass);
-;// CONCATENATED MODULE: ./src/example/temp9/index.ts
-
-
-
-
+/* harmony default export */ var core = (Core);
+;// CONCATENATED MODULE: ./src/example/temp10/index.ts
 
 
 
@@ -224,202 +476,64 @@ function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflec
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !(construct_default())) return false; if ((construct_default()).sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(construct_default()(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
-/*
- * @Description 建筑
- * @Author bihongbin
- * @Date 2021-11-02 16:10:03
- * @LastEditors bihongbin
- * @LastEditTime 2021-11-05 10:40:44
- */
 
 
-
-
- // 地面材质
-
-var meadowJpg = __webpack_require__(4359); // 建筑
-
-
-var buildingMtl = "/static/model/building/house.mtl";
-var buildingModel = "/static/model/building/house.obj";
-
-var ThreeTemplate9 = /*#__PURE__*/function (_BaseClass) {
-  (0,inherits/* default */.Z)(ThreeTemplate9, _BaseClass);
+var ThreeTemplate9 = /*#__PURE__*/function (_Core) {
+  (0,inherits/* default */.Z)(ThreeTemplate9, _Core);
 
   var _super = _createSuper(ThreeTemplate9);
 
-  // 场景
-  // 渲染器
-  // 透视摄像机
-  // 轨道控制器
-  // 地面大小
   function ThreeTemplate9(data) {
     var _this;
 
     (0,classCallCheck/* default */.Z)(this, ThreeTemplate9);
 
-    _this = _super.call(this); // 创建场景
+    _this = _super.call(this); // 初始化scene, canvas, camera, orbitControls, ground, sky
 
-    (0,defineProperty/* default */.Z)((0,assertThisInitialized/* default */.Z)(_this), "scene", void 0);
+    (0,defineProperty/* default */.Z)((0,assertThisInitialized/* default */.Z)(_this), "physicsWorld", void 0);
 
-    (0,defineProperty/* default */.Z)((0,assertThisInitialized/* default */.Z)(_this), "rootCanvas", void 0);
+    (0,defineProperty/* default */.Z)((0,assertThisInitialized/* default */.Z)(_this), "tmpTrans", void 0);
 
-    (0,defineProperty/* default */.Z)((0,assertThisInitialized/* default */.Z)(_this), "camera", void 0);
+    _this.warpSpeed(data).then(function () {
+      _this.initAmmo(); // this.initThree();
+      // this.render();
 
-    (0,defineProperty/* default */.Z)((0,assertThisInitialized/* default */.Z)(_this), "orbitControls", void 0);
-
-    (0,defineProperty/* default */.Z)((0,assertThisInitialized/* default */.Z)(_this), "planeSize", 50);
-
-    _this.scene = _this.createScene(); // 创建渲染器
-
-    _this.rootCanvas = _this.createRootCanvas(data.el); // 创建透视摄像机
-
-    _this.camera = _this.createPerspectiveCamera(); // 创建轨道控制器
-
-    _this.orbitControls = _this.createOrbitControls(); // 创建内容
-
-    _this.createContent();
+    });
 
     return _this;
-  } // 场景
-
+  }
 
   (0,createClass/* default */.Z)(ThreeTemplate9, [{
-    key: "createScene",
-    value: function createScene() {
-      var scene = new three_module/* Scene */.xsS();
-      var alesHelper = new three_module/* AxesHelper */.y8_(10);
-      scene.add(alesHelper); // 环境光
-
-      var ambientLight = new three_module/* AmbientLight */.Mig(0xffffff, 1);
-      scene.add(ambientLight); // 平行光
-
-      var directionalLight = new three_module/* DirectionalLight */.Ox3(0xffffff, 1);
-      directionalLight.position.set(0, 5, 0);
-      scene.add(directionalLight);
-      return scene;
-    } // 渲染器
-
-  }, {
-    key: "createRootCanvas",
-    value: function createRootCanvas(el) {
-      var rootCanvas = new three_module/* WebGLRenderer */.CP7({
-        // 消除锯齿
-        antialias: true
-      });
-      document.getElementById(el).appendChild(rootCanvas.domElement);
-      return rootCanvas;
-    } // 透视摄像机
-
-  }, {
-    key: "createPerspectiveCamera",
-    value: function createPerspectiveCamera() {
-      var fov = 45;
-      var aspect = window.innerWidth / window.innerHeight;
-      var near = 0.1;
-      var far = 100;
-      var camera = new three_module/* PerspectiveCamera */.cPb(fov, aspect, near, far);
-      camera.position.set(10, 5, 15); // 透视摄像机自适应
-
-      (0,get/* default */.Z)((0,getPrototypeOf/* default */.Z)(ThreeTemplate9.prototype), "resizePerspectiveCameraDisplaySize", this).call(this, this.rootCanvas, camera, this.scene);
-
-      return camera;
-    } // 创建轨道控制器
-
-  }, {
-    key: "createOrbitControls",
-    value: function createOrbitControls() {
-      var controls = new OrbitControls/* OrbitControls */.z(this.camera, this.rootCanvas.domElement);
-      controls.addEventListener("change", this.render.bind(this));
-      return controls;
-    } // 内容
-
-  }, {
-    key: "createContent",
-    value: function createContent() {
-      // 创建地面
-      this.createGround(); // 创建建筑
-
-      this.createBuilding();
-    } // 地面
-
-  }, {
-    key: "createGround",
-    value: function createGround() {
+    key: "initAmmo",
+    value: function initAmmo() {
       var _this2 = this;
 
-      // TextureLoader
-      var textureLoader = new three_module/* TextureLoader */.dpR();
-      textureLoader.load(meadowJpg, function (texture) {
-        texture.wrapS = three_module/* RepeatWrapping */.rpg;
-        texture.wrapT = three_module/* RepeatWrapping */.rpg;
+      var setupPhysicsWorld = function setupPhysicsWorld() {};
 
-        repeat_default()(texture).set(_this2.planeSize, _this2.planeSize);
-
-        var mesh = new three_module/* Mesh */.Kj0(new three_module/* PlaneBufferGeometry */.BKK(_this2.planeSize, _this2.planeSize), new three_module/* MeshBasicMaterial */.vBJ({
-          map: texture,
-          // 双面材质
-          side: three_module/* DoubleSide */.ehD
-        }));
-        mesh.rotation.x = Math.PI * -0.5;
-
-        _this2.scene.add(mesh);
-
-        _this2.render();
+      Ammo().then(function (api) {
+        _this2.tmpTrans = new api.btTransform();
       });
-    } // 建筑
-
+    }
   }, {
-    key: "createBuilding",
-    value: function () {
-      var _createBuilding = (0,asyncToGenerator/* default */.Z)( /*#__PURE__*/regenerator_default().mark(function _callee() {
-        var _this3 = this;
-
-        var mtlLoader, objLoader;
-        return regenerator_default().wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                // MTLLoader
-                mtlLoader = new MTLLoader/* MTLLoader */.v(); // OBJLoader
-
-                objLoader = new OBJLoader/* OBJLoader */.L();
-                mtlLoader.load(buildingMtl, function (mtl) {
-                  console.log("mtl", mtl);
-                  objLoader.setMaterials(mtl);
-                  objLoader.load(buildingModel, function (group) {
-                    console.log("group", group);
-
-                    _this3.scene.add(group);
-
-                    _this3.render();
-                  });
-                });
-
-              case 3:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }));
-
-      function createBuilding() {
-        return _createBuilding.apply(this, arguments);
-      }
-
-      return createBuilding;
-    }() // 渲染内容
-
+    key: "initThree",
+    value: function initThree() {}
   }, {
     key: "render",
     value: function render() {
-      this.rootCanvas.render(this.scene, this.camera);
+      var _this3 = this;
+
+      var animate = function animate() {
+        requestAnimationFrame(animate);
+
+        _this3.updateRender();
+      };
+
+      animate();
     }
   }]);
 
   return ThreeTemplate9;
-}(baseClass);
+}(core);
 
 
 ;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[6].use[0]!./src/App.vue?vue&type=script&lang=ts
@@ -439,26 +553,22 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 /* harmony default export */ var Appvue_type_script_lang_ts = ((0,runtime_core_esm_bundler/* defineComponent */.aZ)({
   setup: function setup() {
-    var canvas = null;
-    var state = (0,reactivity_esm_bundler/* reactive */.qj)({
-      visible: false
-    }); // 初始化
+    var state = (0,reactivity_esm_bundler/* reactive */.qj)({}); // 初始化
 
     (0,runtime_core_esm_bundler/* onMounted */.bv)(function () {
-      canvas = new ThreeTemplate9({
+      new ThreeTemplate9({
         el: "canvas"
       });
-      canvas.render();
     });
     return _objectSpread({}, (0,reactivity_esm_bundler/* toRefs */.BK)(state));
   }
 }));
 ;// CONCATENATED MODULE: ./src/App.vue?vue&type=script&lang=ts
  
-;// CONCATENATED MODULE: ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[6].use[0]!./src/App.vue?vue&type=style&index=0&id=833843ec&scoped=true&lang=scss
+;// CONCATENATED MODULE: ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[6].use[0]!./src/App.vue?vue&type=style&index=0&id=2b572450&scoped=true&lang=scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ var Appvue_type_style_index_0_id_833843ec_scoped_true_lang_scss = ({"container":"GF_I59QcC1FMFknwXrqP","console-view":"O6iD5_WEQnxp3coH_5C5"});
-;// CONCATENATED MODULE: ./src/App.vue?vue&type=style&index=0&id=833843ec&scoped=true&lang=scss
+/* harmony default export */ var Appvue_type_style_index_0_id_2b572450_scoped_true_lang_scss = ({"container":"GF_I59QcC1FMFknwXrqP","console-view":"O6iD5_WEQnxp3coH_5C5"});
+;// CONCATENATED MODULE: ./src/App.vue?vue&type=style&index=0&id=2b572450&scoped=true&lang=scss
 
 // EXTERNAL MODULE: ./node_modules/vue-loader/dist/exportHelper.js
 var exportHelper = __webpack_require__(3744);
@@ -470,7 +580,7 @@ var exportHelper = __webpack_require__(3744);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,exportHelper/* default */.Z)(Appvue_type_script_lang_ts, [['render',render],['__scopeId',"data-v-833843ec"]])
+const __exports__ = /*#__PURE__*/(0,exportHelper/* default */.Z)(Appvue_type_script_lang_ts, [['render',render],['__scopeId',"data-v-2b572450"]])
 
 /* harmony default export */ var App = (__exports__);
 ;// CONCATENATED MODULE: ./src/style/global.scss
@@ -677,7 +787,7 @@ module.exports = __webpack_require__.p + "assets/meadow_1685d1fc18dcee0c91d79f3d
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [736], function() { return __webpack_require__(1548); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [736], function() { return __webpack_require__(4612); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
